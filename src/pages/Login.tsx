@@ -11,7 +11,7 @@ const Login: React.FC = () => {
         <div className="login-wrapper">
           <div className="login-box">
 
-            <img src="/logoMuniDigital.png" className="logo" />
+            <img src="/logoMuniDigital.png" className="login-logo" />
 
             <h2>Inicia sesión con tu cuenta</h2>
 
