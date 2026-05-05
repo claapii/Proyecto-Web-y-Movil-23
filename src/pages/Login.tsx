@@ -23,7 +23,7 @@ const Login: React.FC = () => {
               <IonInput type="password" placeholder="Contraseña" />
             </IonItem>
 
-            <IonButton expand="block" className="primary-btn" routerLink="/Home">
+            <IonButton expand="block" className="primary-btn" routerLink="/home">
               Iniciar sesión
             </IonButton>
 

@@ -1,0 +1,102 @@
+.tramites-hero {
+  background-color: #f2f6ff;
+  padding: 50px 20px;
+  text-align: center;
+}
+
+.tramites-hero-text h1 {
+  font-size: 36px;
+  color: #003366;
+  margin-bottom: 15px;
+}
+
+.tramites-hero-text p {
+  font-size: 18px;
+  color: #444;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.tramites-container {
+  padding: 40px 30px;
+}
+
+.tramites-container h2 {
+  text-align: center;
+  color: #003366;
+  font-size: 30px;
+  margin-bottom: 30px;
+}
+
+.tramites-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 25px;
+}
+
+.tramite-card {
+  background-color: white;
+  border-radius: 15px;
+  padding: 25px;
+  text-align: center;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.15);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.tramite-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0px 6px 16px rgba(0, 0, 0, 0.2);
+}
+
+.tramite-icon {
+  font-size: 40px;
+  margin-bottom: 15px;
+}
+
+.tramite-card h3 {
+  color: #003366;
+  font-size: 20px;
+  margin-bottom: 10px;
+}
+
+.tramite-card p {
+  color: #555;
+  font-size: 15px;
+  margin-bottom: 20px;
+}
+
+/* Botón Ionic */
+.tramite-btn {
+  --background: #005bbb;
+  --background-hover: #003f88;
+  --background-activated: #003f88;
+  --background-focused: #003f88;
+
+  --color: white;
+  --border-radius: 20px;
+
+  font-weight: bold;
+  text-transform: none;
+  margin-top: 10px;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .tramites-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .tramites-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .tramites-hero-text h1 {
+    font-size: 28px;
+  }
+
+  .tramites-container {
+    padding: 30px 15px;
+  }
+}

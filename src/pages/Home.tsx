@@ -18,11 +18,11 @@ const Home: React.FC = () => {
             <img src="/logoMuniDigitalBlanco.png" className="home-logo" />
           
             <nav className="nav-menu">
-              <NavLink to="/Home">Inicio</NavLink>
-              <NavLink to="/Tramites">Trámites</NavLink>
-              <NavLink to="/Servicios">Servicios</NavLink>
-              <NavLink to="/Oficinas">Oficinas</NavLink>
-              <NavLink to="/FAQ">Preguntas frecuentes</NavLink>
+              <NavLink to="/home">Inicio</NavLink>
+              <NavLink to="/tramites">Trámites</NavLink>
+              <NavLink to="/servicios">Servicios</NavLink>
+              <NavLink to="/oficinas">Oficinas</NavLink>
+              <NavLink to="/faq">Preguntas frecuentes</NavLink>
             </nav>
           </div>
         </IonToolbar>
