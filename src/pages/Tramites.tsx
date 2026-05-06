@@ -20,11 +20,11 @@ const Tramites: React.FC = () => {
             <img src="/logoMuniDigitalBlanco.png" className="home-logo" />
 
             <nav className="nav-menu">
-              <NavLink to="/Home">Inicio</NavLink>
-              <NavLink to="/Tramites">Trámites</NavLink>
-              <NavLink to="/Servicios">Servicios</NavLink>
-              <NavLink to="/Oficinas">Oficinas</NavLink>
-              <NavLink to="/FAQ">Preguntas frecuentes</NavLink>
+              <NavLink to="/home">Inicio</NavLink>
+              <NavLink to="/tramites">Trámites</NavLink>
+              <NavLink to="/servicios">Servicios</NavLink>
+              <NavLink to="/oficinas">Oficinas</NavLink>
+              <NavLink to="/faq">Preguntas frecuentes</NavLink>
             </nav>
           </div>
         </IonToolbar>
@@ -56,8 +56,12 @@ const Tramites: React.FC = () => {
               <p>
                 Solicita o renueva tu licencia de conducir de forma simple.
               </p>
-              <IonButton routerLink="/horarios" className="tramite-btn">
-                Ver trámite
+              <IonButton 
+                routerLink="/detalle" 
+                routerDirection="forward"
+                className="tramite-btn"
+              >
+                Ver Trámite
               </IonButton>
             </div>
 
@@ -67,7 +71,7 @@ const Tramites: React.FC = () => {
               <p>
                 Revisa la información necesaria para permisos de circulación.
               </p>
-              <IonButton routerLink="/horarios" className="tramite-btn">
+              <IonButton routerLink="/detalle/2" className="tramite-btn">
                 Ver trámite
               </IonButton>
             </div>
@@ -78,7 +82,7 @@ const Tramites: React.FC = () => {
               <p>
                 Obtén certificados y documentos médicos.
               </p>
-              <IonButton routerLink="/horarios" className="tramite-btn">
+              <IonButton routerLink="/detalle/3" className="tramite-btn">
                 Ver trámite
               </IonButton>
             </div>
@@ -89,7 +93,7 @@ const Tramites: React.FC = () => {
               <p>
                 Solicita los documentos o información acerca de la inscripción de patente.
               </p>
-              <IonButton routerLink="/horarios" className="tramite-btn">
+              <IonButton routerLink="/detalle/4" className="tramite-btn">
                 Ver trámite
               </IonButton>
             </div>

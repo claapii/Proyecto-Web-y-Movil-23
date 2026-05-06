@@ -80,6 +80,7 @@ import Login from './pages/Login';
 import Home from './pages/Home';
 import Tramites from './pages/Tramites';
 import Horarios from './pages/Horarios';
+import Detalle from './pages/Detalle';
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -100,6 +101,7 @@ import '@ionic/react/css/display.css';
 /* Theme variables */
 import './theme/variables.css';
 
+
 setupIonicReact();
 
 const App: React.FC = () => (
@@ -112,6 +114,8 @@ const App: React.FC = () => (
         <Route path="/home" component={Home} exact />
 
         <Route path="/tramites" component={Tramites} exact />
+
+        <Route path="/detalle" component={Detalle} exact />
 
         <Route path="/horarios" component={Horarios} exact />
 
