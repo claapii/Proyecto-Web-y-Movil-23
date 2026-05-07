@@ -1,14 +1,18 @@
 /* CONTENEDOR PRINCIPAL */
 .detalle-container {
   display: flex;
-  justify-content: space-between;
-  padding: 40px;
-  gap: 40px;
+  flex-direction: column;
+  align-items: center; 
+  padding: 40px 20px; /* Un poco de padding lateral para móviles */
+  gap: 30px;
+  max-width: 1200px; /* Aumentado de 1000px a 1200px */
+  margin: 0 auto;
 }
 
 /* IZQUIERDA */
 .detalle-info {
-  width: 60%;
+  width: 100%;
+  text-align: center;
 }
 
 .detalle-info h1 {
@@ -44,26 +48,38 @@
 /* REQUISITOS */
 .requisitos {
   display: flex;
-  justify-content: space-around;
-  margin-bottom: 20px;
+  flex-direction: row;  /* <--- Esto los pone en horizontal */
+  flex-wrap: wrap;      /* Por si hay muchos, que bajen a la siguiente línea */
+  justify-content: center; /* Centra los círculos horizontalmente */
+  gap: 50px;            /* Espacio entre cada círculo */
+  width: 100%;
+  background: #f8f9fa;  /* El fondo gris clarito */
+  padding: 40px;
+  border-radius: 20px;
 }
 
+/* Cada bloque (Círculo + Texto) */
 .req-item {
   display: flex;
   flex-direction: column;
   align-items: center;
+  width: 140px; /* UN POCO MÁS DE ANCHO PARA EL TEXTO */
+  text-align: center;
 }
 
 .circle {
   background: #f25f5c;
-  width: 100px;
-  height: 100px;
+  width: 90px;
+  height: 90px;
   border-radius: 50%;
   display: flex;
   justify-content: center;
   align-items: center;
-  font-weight: bold;
-  margin-bottom: 10px;
+  font-size: 1.5rem; /* TAMAÑO DEL ICONO/TEXTO DENTRO */
+  color: white;
+  margin-bottom: 15px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  transition: transform 0.2s;
 }
 
 /* BOTÓN */

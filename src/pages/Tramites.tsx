@@ -57,7 +57,7 @@ const Tramites: React.FC = () => {
                 Solicita o renueva tu licencia de conducir de forma simple.
               </p>
               <IonButton 
-                routerLink="/detalle" 
+                routerLink="/detalle/1" 
                 routerDirection="forward"
                 className="tramite-btn"
               >
