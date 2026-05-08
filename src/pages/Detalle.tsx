@@ -100,7 +100,6 @@ const Detalle: React.FC = () => {
             <nav className="nav-menu">
                 <NavLink to="/home">Inicio</NavLink>
                 <NavLink to="/tramites">Trámites</NavLink>
-                <NavLink to="/servicios">Servicios</NavLink>
                 <NavLink to="/oficinas">Oficinas</NavLink>
                 <NavLink to="/faq">Preguntas frecuentes</NavLink>
             </nav>

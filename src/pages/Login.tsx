@@ -29,11 +29,11 @@ const Login: React.FC = () => {
 
             <p className="link">¿Olvidaste tu contraseña?</p>
 
-            <IonButton expand="block" className="dark-btn">
+            <IonButton expand="block" className="dark-btn" routerLink='/clave-unica'>
               Inicia sesión con clave única
             </IonButton>
 
-            <IonButton expand="block" fill="outline">
+            <IonButton expand="block" fill="outline" routerLink='/register'>
               Crear cuenta nueva
             </IonButton>
 

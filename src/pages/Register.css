@@ -1,0 +1,28 @@
+.register-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+
+    background: white;
+}
+
+.register-box {
+    width: 420px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 40px;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+}
+
+.register-logo {
+    width: 180px;
+    margin: 0 auto 10px auto;
+}
+
+.register-box h2 {
+    text-align: center;
+    margin-bottom: 10px;
+}
