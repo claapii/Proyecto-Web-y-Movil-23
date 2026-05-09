@@ -1,0 +1,95 @@
+.cu-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: #f3f3f3;
+    padding: 30px;
+}
+
+.cu-card {
+    width: 600px;
+    background: white;
+    border: 1px solid #cfcfcf;
+    padding: 0 60px 40px 60px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+
+
+.cu-topbar {
+    display: flex;
+    width: 170px;
+    height: 10px;
+    margin-bottom: 35px;
+}
+
+.cu-topbar .blue {
+    flex: 1;
+    background: #005eb8;
+}
+
+.cu-topbar .red {
+    flex: 1;
+    background: #e63946;
+}
+
+.cu-logo {
+    width: 250px;
+    margin-bottom: 70px;
+}
+
+
+.cu-title {
+    text-align: center;
+    font-size: 3rem;
+    font-family: 'Roboto Slab', serif;
+    color: #1f1f1f;
+    margin-bottom: 8px;
+}
+
+.cu-subtitle {
+    text-align: center;
+    font-size: 1.8rem;
+    margin-bottom: 60px;
+    color: #333;
+}
+
+
+.cu-input {
+    --background: white;
+    border: 1px solid #9c9c9c;
+    margin-bottom: 40px;
+    font-size: 1.4rem;
+    --padding-start: 18px;
+    height: 70px;
+}
+
+
+.cu-link {
+    color: #005eb8;
+    font-size: 1.2rem;
+    margin-bottom: 50px;
+    cursor: pointer;
+}
+
+
+.cu-button {
+    --background: #005eb8;
+    height: 65px;
+    font-size: 1.5rem;
+    font-weight: 500;
+    margin-bottom: 100px;
+    text-transform: none;
+}
+
+
+.cu-footer {
+    border-top: 1px solid #cfcfcf;
+    padding-top: 18px;
+    display: flex;
+    justify-content: space-between;
+    color: #333;
+    font-size: 1rem;
+}
