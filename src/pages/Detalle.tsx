@@ -9,6 +9,7 @@ import {
 import { useParams } from "react-router-dom";
 
 import "./detalle.css";
+import NavBar from "../components/NavBar";
 import { NavLink } from "react-router-dom";
 
 
@@ -94,17 +95,11 @@ const Detalle: React.FC = () => {
     <IonPage>
       <IonHeader>
         <IonToolbar className="toolbar">
-          <div className="header-container">
-            <img src="/logoMuniDigitalBlanco.png" alt="logo" className="home-logo" />
-
-            <nav className="nav-menu">
-                <NavLink to="/home">Inicio</NavLink>
-                <NavLink to="/tramites">Trámites</NavLink>
-                <NavLink to="/servicios">Servicios</NavLink>
-                <NavLink to="/oficinas">Oficinas</NavLink>
-                <NavLink to="/faq">Preguntas frecuentes</NavLink>
-            </nav>
-          </div>
+          <IonHeader>
+            <IonToolbar className="toolbar">
+              <NavBar />
+            </IonToolbar>
+          </IonHeader>
         </IonToolbar>
       </IonHeader>
 
