@@ -83,11 +83,12 @@
 }
 
 /* BOTÓN */
-.btn-horarios {
-  background: var(--ion-color-primary);
-  color: white;
-  border: none;
-  padding: 12px 20px;
-  border-radius: 10px;
-  cursor: pointer;
+.detalle-btn {
+  width: 260px;
+  height: 50px;
+
+  margin: 30px auto;
+
+  font-size: 18px;
+  font-weight: bold;
 }

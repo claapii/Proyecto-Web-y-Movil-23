@@ -95,11 +95,7 @@ const Detalle: React.FC = () => {
     <IonPage>
       <IonHeader>
         <IonToolbar className="toolbar">
-          <IonHeader>
-            <IonToolbar className="toolbar">
-              <NavBar />
-            </IonToolbar>
-          </IonHeader>
+          <NavBar />
         </IonToolbar>
       </IonHeader>
 
@@ -134,35 +130,13 @@ const Detalle: React.FC = () => {
 
             </div>
           ))}
-
-        </div>
-
-          {/* DERECHA */}
-          {/*<div className="detalle-card">
-            <h3>REQUISITOS</h3>
-
-            <div className="requisitos">
-              <div className="req-item">
-                <div className="circle">18+</div>
-                <p>Mayor de 18 años</p>
-              </div>
-
-              <div className="req-item">
-                <div className="circle"><img src="/cedula.png" alt="Cédula" className="req-img" /></div>
-                <p>Cédula vigente</p>
-              </div>
-
-              <div className="req-item">
-                <div className="circle">🩺</div>
-                <p>Examen médico aprobado</p>
-              </div>
-            </div>
-
-                <IonButton routerLink= "/horarios">
-                Ver horarios
-                </IonButton>
-          </div>*/}
-
+          </div>
+          <IonButton
+            routerLink={`/horarios/${id}`}
+            className="detalle-btn"
+          >
+            Ver horarios
+          </IonButton>
         </div>
       </IonContent>
     </IonPage>
