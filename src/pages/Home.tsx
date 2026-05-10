@@ -8,7 +8,6 @@ import {
 
 import './Home.css';
 import NavBar from "../components/NavBar";
-import { NavLink } from 'react-router-dom';
 
 const Home: React.FC = () => {
   return (
@@ -17,11 +16,7 @@ const Home: React.FC = () => {
       {/* HEADER */}
       <IonHeader>
         <IonToolbar className="toolbar">
-          <IonHeader>
-            <IonToolbar className="toolbar">
-              <NavBar />
-            </IonToolbar>
-          </IonHeader>
+          <NavBar />
         </IonToolbar>
       </IonHeader>
 
@@ -62,7 +57,11 @@ const Home: React.FC = () => {
 
             <h3>LICENCIAS DE CONDUCIR</h3>
 
-            <IonButton className="card-btn" routerLink='/detalle/1'>
+            <IonButton 
+              className="card-btn" 
+              routerLink="/detalle/1"
+              routerDirection="forward"
+            >
               AGENDA ACÁ
             </IonButton>
 
@@ -77,7 +76,11 @@ const Home: React.FC = () => {
 
             <h3>NUESTRAS OFICINAS</h3>
 
-            <IonButton className="card-btn">
+            <IonButton 
+              className="card-btn"
+              routerLink="/oficinas"
+              routerDirection="forward"
+            >
               VER AQUÍ
             </IonButton>
 

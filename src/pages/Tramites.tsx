@@ -8,7 +8,6 @@ import {
 
 import './Tramites.css';
 import NavBar from "../components/NavBar";
-import { NavLink } from 'react-router-dom';
 
 const Tramites: React.FC = () => {
   return (
@@ -17,11 +16,7 @@ const Tramites: React.FC = () => {
       {/* HEADER */}
       <IonHeader>
         <IonToolbar className="toolbar">
-          <IonHeader>
-            <IonToolbar className="toolbar">
-              <NavBar />
-            </IonToolbar>
-          </IonHeader>
+          <NavBar />
         </IonToolbar>
       </IonHeader>
 
@@ -66,7 +61,11 @@ const Tramites: React.FC = () => {
               <p>
                 Revisa la información necesaria para permisos de circulación.
               </p>
-              <IonButton routerLink="/detalle/2" className="tramite-btn">
+              <IonButton 
+                routerLink="/detalle/2" 
+                routerDirection="forward"
+                className="tramite-btn"
+              >
                 Ver trámite
               </IonButton>
             </div>
@@ -77,7 +76,11 @@ const Tramites: React.FC = () => {
               <p>
                 Obtén certificados y documentos médicos.
               </p>
-              <IonButton routerLink="/detalle/3" className="tramite-btn">
+              <IonButton 
+                routerLink="/detalle/3" 
+                routerDirection="forward"
+                className="tramite-btn"
+              >
                 Ver trámite
               </IonButton>
             </div>
@@ -88,7 +91,11 @@ const Tramites: React.FC = () => {
               <p>
                 Solicita los documentos o información acerca de la inscripción de patente.
               </p>
-              <IonButton routerLink="/detalle/4" className="tramite-btn">
+              <IonButton 
+                routerLink="/detalle/4" 
+                routerDirection="forward"
+                className="tramite-btn"
+              >
                 Ver trámite
               </IonButton>
             </div>

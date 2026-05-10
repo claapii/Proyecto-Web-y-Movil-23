@@ -6,7 +6,6 @@ import {
 } from '@ionic/react';
 
 import './Horarios.css';
-import { NavLink } from 'react-router-dom';
 import { useState } from 'react';
 import NavBar from "../components/NavBar";
 
@@ -54,11 +53,7 @@ const Horarios: React.FC = () => {
       {/* HEADER */}
       <IonHeader>
         <IonToolbar className="toolbar">
-          <IonHeader>
-            <IonToolbar className="toolbar">
-              <NavBar />
-            </IonToolbar>
-          </IonHeader>
+          <NavBar />
         </IonToolbar>
       </IonHeader>
 

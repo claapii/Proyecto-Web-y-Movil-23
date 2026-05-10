@@ -10,9 +10,6 @@ import { useParams } from "react-router-dom";
 
 import "./detalle.css";
 import NavBar from "../components/NavBar";
-import { NavLink } from "react-router-dom";
-
-
 
 const Detalle: React.FC = () => {
   const { id } = useParams<{ id: string }>();

@@ -14,6 +14,7 @@ import Horarios from './pages/Horarios';
 import Detalle from './pages/Detalle';
 import Register from './pages/Register';
 import ClaveUnica from './pages/ClaveUnica';
+import Oficinas from './pages/Oficinas';
 
 
 /* Core CSS required for Ionic components to work properly */
@@ -51,14 +52,16 @@ const App: React.FC = () => (
 
         <Route path="/tramites" component={Tramites} exact />
 
-        <Route path="/detalle/:id" component={Detalle} exact={true} />
+        <Route path="/oficinas" component={Oficinas} exact/>
+
+        <Route path="/detalle/:id" component={Detalle} exact />
 
         <Route path="/horarios/:id" component={Horarios} exact />
-
-        <Route path="/register" component={Register} exact />
         
-        <Route path="/clave-unica" component={ClaveUnica} exact />
+        <Route path="/register" component={Register} exact />
       
+        <Route path="/clave-unica" component={ClaveUnica} exact/>
+        
       </IonRouterOutlet>
     </IonReactRouter>
   </IonApp>

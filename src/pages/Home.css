@@ -34,6 +34,7 @@
   text-decoration: underline;
 }
 
+/* BANNER */
 .banner {
   background: #f25f5c;
   color: white;
@@ -56,6 +57,16 @@
   color: white;
 }
 
+.banner-btn {
+  --background: white;
+  --background-hover: #eeeeee;
+  --color: #f25f5c;
+  --border-radius: 20px;
+
+  font-weight: bold;
+  text-transform: none;
+  margin-top: 10px;
+}
 
 .banner-img {
   height: 250px;
@@ -63,13 +74,13 @@
   width: 250px;
 }
 
-
-/* 🔵 CARDS */
+/* CARDS */
 .cards {
   display: flex;
   justify-content: space-around;
   margin-top: 40px;
   padding: 20px;
+  gap: 25px;
 }
 
 .card {
@@ -83,9 +94,9 @@
   position: relative;
 }
 
-.cards h3{
-    color:white;
-    margin-top: 45px;
+.cards h3 {
+  color: white;
+  margin-top: 45px;
 }
 
 /* ICONO CIRCULAR */
@@ -104,11 +115,60 @@
   transform: translateX(-50%);
 }
 
+/* BOTONES DE LAS CARDS */
+.card-btn {
+  --background: var(--ion-color-primary);
+  --background-hover: #003f88;
+  --background-activated: #003f88;
+  --background-focused: #003f88;
+
+  --color: white;
+  --border-radius: 20px;
+
+  font-weight: bold;
+  text-transform: none;
+  margin-top: 8px;
+}
 
 /* TELÉFONO */
 .phone {
-    font-size: x-large;
+  font-size: x-large;
   margin-top: 20px;
   font-weight: bold;
   color: white;
+}
+
+/* RESPONSIVE */
+@media (max-width: 900px) {
+  .banner {
+    flex-direction: column;
+    max-height: none;
+    text-align: center;
+  }
+
+  .banner-text {
+    max-width: 100%;
+    margin-left: 0;
+  }
+
+  .banner-text h1 {
+    font-size: 32px;
+  }
+
+  .banner-img {
+    margin-right: 0;
+    margin-top: 20px;
+    width: 200px;
+    height: 200px;
+  }
+
+  .cards {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .card {
+    width: 85%;
+    max-width: 320px;
+  }
 }
