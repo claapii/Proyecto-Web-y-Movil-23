@@ -5,7 +5,7 @@ Integrantes
 + Diego Valenzuela
 
 ## Objetivo de la Entrega Parcial 1
-+ Definición del problam y usuario objetivo.
++ Definición del problema y usuario objetivo.
 + Identificación de requerimientos.
 + Diseño de la UX.
 + Arquitectura de navegación.
@@ -30,7 +30,7 @@ Integrantes
 ## Justificación del problema y análisis del usuario objetivo (EP 1.2)
 
 ### Descripción del proyecto
-MuniDigital es una aplicación web y móvil desarrollada con Ionic y React que busca mejorar el acceso a los trámites municipales dentro ed Chile, permitiendo a los ciudadanos agendar y gestionar sus solicitudes de forma digital.
+MuniDigital es una aplicación web y móvil desarrollada con Ionic y React que busca mejorar el acceso a los trámites municipales dentro de Chile, permitiendo a los ciudadanos agendar y gestionar sus solicitudes de forma digital.
 
 Esta solución surge como respuesta a la baja digitalización de los servicios municipales, donde muchos procesos aún requieren presencialidad o presentan largos tiempos de espera, afectando la UX.
 
@@ -38,9 +38,14 @@ Esta solución surge como respuesta a la baja digitalización de los servicios m
 + Ciudadanos mayores de 18 años.
 + Personas que necesitan realizar trámites municipales.
 + Usuarios con acceso a dispositivos móviles o web.
-+ Funcionarios minucipales (Usuario secundario).
++ Funcionarios municipales (Usuario secundario).
 
 ## Bocetos de UI/UX (EP 1.3)
+### Carpeta de "Otros".
+La carpeta "Otros" contiene:
++ Mockups
++ Material complementario
+
 
 ## Arquitectura de navegación y UX (EP 1.4)
 ### (a) Rutas principales y secundarias
@@ -129,3 +134,44 @@ Control de acceso: rutas protegidas con verificación de rol (login) y redirecci
 + Eficiencia: rutas directas minimizan pasos innecesarios.
 + Claridad estructural: jerarquía definida facilita mantenimiento.
 + Escalabilidad: estructura modular permite agregar nuevas funcionalidades sin romper la arquitectura.
+
+## Instalación y ejecución del proyecto
+
+### Requisitos de instalación
++ Instalar Node.js.
++ Instalar Ionic CLI.
+
+## Clonación del repositorio
+```bash
+git clone https://github.com/claapii/Proyecto-Web-y-Movil-23.git
+```
+
+## Instalación de dependencias
+```bash
+npm install
+```
+
+## Ejecución del proyecto
+```bash
+ionic serve
+```
+
+## Tecnologías utilizadas en este proyecto.
++ Ionic Framework.
++ React.
++ TypeScript.
++ React Router.
++ CSS.
++ Git y GitHub.
+
+## Estado actual del proyecto
+
+Actualmente el proyecto cuenta con:
++ Pantalla de login.
++ Página principal (Home).
++ Listado de trámites municipales.
++ Vista dinámica de detalle de trámites.
++ Pantalla de horarios.
++ Navegación entre pantallas mediante React Router.
++ Componente reutilizable NavBar.
++ Diseño responsive inicial para web y móvil.
