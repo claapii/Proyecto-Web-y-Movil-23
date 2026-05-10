@@ -9,7 +9,6 @@ import {
 import { useParams } from "react-router-dom";
 
 import "./detalle.css";
-
 import NavBar from "../components/NavBar";
 
 /*
