@@ -1,47 +1,112 @@
 import {
-  IonPage, IonContent, IonInput, IonButton, IonItem
+  IonPage,
+  IonContent,
+  IonInput,
+  IonButton,
+  IonItem
 } from '@ionic/react';
 
 import './Login.css';
 
+/*
+ * Página principal de inicio de sesión.
+ * Permite acceder al sistema mediante:
+ * - correo y contraseña
+ * - autenticación con ClaveÚnica
+ * 
+ * También incluye acceso al registro
+ * de nuevos usuarios.
+*/
+
 const Login: React.FC = () => {
   return (
     <IonPage>
+
       <IonContent fullscreen>
+
+        {/*Contenedor principal centrado*/}
         <div className="login-wrapper">
+
+          {/*Caja principal de autenticación*/}
           <div className="login-box">
 
-            <img src="/logoMuniDigital.png" className="login-logo" />
+            {/*Logo institucional*/}
+            <img
+              src="/logoMuniDigital.png"
+              className="login-logo"
+            />
 
-            <h2>Inicia sesión con tu cuenta</h2>
+            {/*Título de bienvenida*/}
+            <h2>
+              Inicia sesión con tu cuenta
+            </h2>
 
+            {/*Campo correo electrónico*/}
             <IonItem>
-              <IonInput placeholder="Correo electrónico" />
+
+              <IonInput
+                placeholder="Correo electrónico"
+              />
+
             </IonItem>
 
+            {/*Campo contraseña*/}
             <IonItem>
-              <IonInput type="password" placeholder="Contraseña" />
+
+              <IonInput
+                type="password"
+                placeholder="Contraseña"
+              />
+
             </IonItem>
 
-            <IonButton expand="block" className="primary-btn" routerLink="/home">
+            {/*Botón de acceso principal*/}
+            <IonButton
+              expand="block"
+              className="primary-btn"
+              routerLink="/home"
+            >
               Iniciar sesión
             </IonButton>
 
-            <p className="link">¿Olvidaste tu contraseña?</p>
+            {/*Recuperación de contraseña*/}
+            <p className="link">
 
-            <IonButton expand="block" className="dark-btn" routerLink='/clave-unica'>
+              ¿Olvidaste tu contraseña?
+
+            </p>
+
+            {/*Acceso mediante ClaveÚnica*/}
+            <IonButton
+              expand="block"
+              className="dark-btn"
+              routerLink='/clave-unica'
+            >
               Inicia sesión con clave única
             </IonButton>
 
-            <IonButton expand="block" fill="outline" routerLink='/register'>
+            {/*Registro de nuevos usuarios*/}
+            <IonButton
+              expand="block"
+              fill="outline"
+              routerLink='/register'
+            >
               Crear cuenta nueva
             </IonButton>
 
-            <p className="contacto">Contáctanos al 600 329 932</p>
+            {/*Información de contacto*/}
+            <p className="contacto">
+
+              Contáctanos al 600 329 932
+
+            </p>
+
           </div>
+
         </div>
 
       </IonContent>
+
     </IonPage>
   );
 };
