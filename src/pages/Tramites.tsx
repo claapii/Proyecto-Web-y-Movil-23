@@ -7,8 +7,9 @@ import {
 } from '@ionic/react';
 
 import './Tramites.css';
-
 import NavBar from "../components/NavBar";
+import axios from "axios";
+import { useEffect, useState } from "react";
 
 /*
  * Página de trámites municipales.
@@ -18,6 +19,36 @@ import NavBar from "../components/NavBar";
 */
 
 const Tramites: React.FC = () => {
+
+  const [tramites, setTramites] = useState<any[]>([]);
+
+  useEffect(() => {
+
+  const obtenerTramites = async () => {
+
+    try {
+
+      const response = await axios.get(
+        "http://localhost:3000/api/tramites"
+      );
+
+      setTramites(response.data.data);
+
+    } catch (error) {
+
+      console.error(
+        "Error al obtener trámites:",
+        error
+      );
+
+    }
+
+  };
+
+  obtenerTramites();
+
+}, []);
+
   return (
     <IonPage>
 
@@ -62,113 +93,38 @@ const Tramites: React.FC = () => {
 
           {/*Grilla de trámites*/}
           <div className="tramites-grid">
+            {
+              tramites.map((tramite) => (
 
-            {/*Trámite 1*/}
-            <div className="tramite-card">
+                <div
+                  className="tramite-card"
+                  key={tramite.id_tramite}
+                >
 
-              {/*Icono representativo*/}
-              <div className="tramite-icon">
-                🪪
-              </div>
+                  <div className="tramite-icon">
+                    📄
+                  </div>
 
-              <h3>
-                Licencia de conducir
-              </h3>
+                  <h3>
+                    {tramite.titulo}
+                  </h3>
 
-              <p>
-                Solicita o renueva tu licencia
-                de conducir de forma simple.
-              </p>
+                  <p>
+                    {tramite.descripcion}
+                  </p>
 
-              {/*Navegación al detalle*/}
-              <IonButton
-                routerLink="/detalle/1"
-                routerDirection="forward"
-                className="tramite-btn"
-              >
-                Ver Trámite
-              </IonButton>
+                  <IonButton
+                    routerLink={`/detalle/${tramite.id_tramite}`}
+                    routerDirection="forward"
+                    className="tramite-btn"
+                  >
+                    Ver trámite
+                  </IonButton>
 
-            </div>
+                </div>
 
-            {/*Trámite 2*/}
-            <div className="tramite-card">
-
-              <div className="tramite-icon">
-                🛣️
-              </div>
-
-              <h3>
-                Permiso de circulación
-              </h3>
-
-              <p>
-                Revisa la información necesaria
-                para permisos de circulación.
-              </p>
-
-              <IonButton
-                routerLink="/detalle/2"
-                routerDirection="forward"
-                className="tramite-btn"
-              >
-                Ver trámite
-              </IonButton>
-
-            </div>
-
-            {/*Trámite 3*/}
-            <div className="tramite-card">
-
-              <div className="tramite-icon">
-                📄
-              </div>
-
-              <h3>
-                Certificados médicos
-              </h3>
-
-              <p>
-                Obtén certificados y documentos
-                médicos.
-              </p>
-
-              <IonButton
-                routerLink="/detalle/3"
-                routerDirection="forward"
-                className="tramite-btn"
-              >
-                Ver trámite
-              </IonButton>
-
-            </div>
-
-            {/*Trámite 4*/}
-            <div className="tramite-card">
-
-              <div className="tramite-icon">
-                🚗
-              </div>
-
-              <h3>
-                Inscripción patente
-              </h3>
-
-              <p>
-                Solicita los documentos o información
-                acerca de la inscripción de patente.
-              </p>
-
-              <IonButton
-                routerLink="/detalle/4"
-                routerDirection="forward"
-                className="tramite-btn"
-              >
-                Ver trámite
-              </IonButton>
-
-            </div>
-
+              ))
+            }
           </div>
 
         </section>

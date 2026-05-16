@@ -35,6 +35,13 @@ router.get("/:id", async (req, res) => {
       [id]
     );
 
+    const requisitos = await pool.query(
+      `SELECT icono, texto
+      FROM requisitos
+      WHERE id_tramite = $1`,
+      [id]
+    );
+
     if (result.rows.length === 0) {
       return res.status(404).json({
         success: false,
@@ -45,7 +52,10 @@ router.get("/:id", async (req, res) => {
     res.status(200).json({
       success: true,
       message: "Trámite obtenido correctamente",
-      data: result.rows[0]
+      data: {
+        ...result.rows[0],
+        requisitos: requisitos.rows
+      }
     });
 
   } catch (error) {

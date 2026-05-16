@@ -10,6 +10,8 @@ import { useParams } from "react-router-dom";
 
 import "./detalle.css";
 import NavBar from "../components/NavBar";
+import axios from "axios";
+import { useEffect, useState } from "react";
 
 /*
  * Página de detalle de trámites.
@@ -21,136 +23,38 @@ const Detalle: React.FC = () => {
 
   /*Obtención del parámetro dinámico de la ruta*/
   const { id } = useParams<{ id: string }>();
+  const [tramite, setTramite] = useState<any>(null);
 
   /*
    * Base de datos temporal de trámites.
    * Simula información obtenida desde backend.
   */
-  const tramites: Record<string, any> = {
+  useEffect(() => {
 
-    "1": {
-      titulo: "LICENCIA DE CONDUCIR",
+    const obtenerTramite = async () => {
 
-      descripcion:
-        "Este trámite permite solicitar o renovar la licencia de conducir en la municipalidad.",
+      try {
 
-      duracion: "30 minutos",
+        const response = await axios.get(
+          `http://localhost:3000/api/tramites/${id}`
+        );
 
-      modalidad: "Presencial",
+        setTramite(response.data.data);
 
-      ubicacion: "Oficina Municipal",
+      } catch (error) {
 
-      requisitos: [
-        {
-          icono: "18+",
-          texto: "Mayor de 18 años"
-        },
+        console.error(
+          "Error al obtener trámite:",
+          error
+        );
 
-        {
-          icono: "🪪",
-          texto: "Cédula vigente"
-        },
+      }
 
-        {
-          icono: "🩺",
-          texto: "Examen médico aprobado"
-        }
-      ]
-    },
+    };
 
-    "2": {
-      titulo: "PERMISO DE CIRCULACIÓN",
+    obtenerTramite();
 
-      descripcion:
-        "Este trámite permite renovar u obtener el permiso de circulación.",
-
-      duracion: "20 minutos",
-
-      modalidad: "Presencial y online",
-
-      ubicacion: "Dirección de tránsito",
-
-      requisitos: [
-        {
-          icono: "🚗",
-          texto: "Vehículo registrado"
-        },
-
-        {
-          icono: "📄",
-          texto: "Documentación al día"
-        },
-
-        {
-          icono: "💳",
-          texto: "Pago del permiso"
-        }
-      ]
-    },
-
-    "3": {
-      titulo: "CERTIFICADOS MÉDICOS",
-
-      descripcion:
-        "Solicita certificados médicos y documentos necesarios.",
-
-      duracion: "15 minutos",
-
-      modalidad: "Presencial",
-
-      ubicacion: "Centro médico municipal",
-
-      requisitos: [
-        {
-          icono: "🩺",
-          texto: "Evaluación médica"
-        },
-
-        {
-          icono: "🪪",
-          texto: "Cédula vigente"
-        },
-
-        {
-          icono: "📋",
-          texto: "Solicitud del trámite"
-        }
-      ]
-    },
-
-    "4": {
-      titulo: "INSCRIPCIÓN PATENTE",
-
-      descripcion:
-        "Realiza la inscripción de patente comercial.",
-
-      duracion: "25 minutos",
-
-      modalidad: "Presencial",
-
-      ubicacion: "Departamento de patentes",
-
-      requisitos: [
-        {
-          icono: "🏢",
-          texto: "Dirección comercial"
-        },
-
-        {
-          icono: "📄",
-          texto: "Documentación legal"
-        },
-
-        {
-          icono: "💼",
-          texto: "Inicio de actividades"
-        }
-      ]
-    }
-  };
-
-  /*Obtención del trámite correspondiente*/
-  const tramite = id ? tramites[id] : null;
+  }, [id]);
 
   /*
    * Validación:
@@ -164,7 +68,7 @@ const Detalle: React.FC = () => {
         <IonContent>
 
           <h1>
-            Trámite no encontrado
+            Cargando trámite...
           </h1>
 
         </IonContent>

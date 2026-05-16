@@ -3,6 +3,8 @@ const cors = require("cors");
 const pool = require("./config/db");
 const oficinasRoutes = require("./routes/oficinasRoutes");
 const tramitesRoutes = require("./routes/tramitesRoutes");
+const authRoutes = require("./routes/authRoutes");
+const reservasRoutes = require("./routes/reservasRoutes");
 
 const app = express();
 
@@ -10,6 +12,8 @@ app.use(cors());
 app.use(express.json());
 app.use("/api/oficinas", oficinasRoutes);
 app.use("/api/tramites", tramitesRoutes);
+app.use("/api/auth", authRoutes);
+app.use("/api/reservas", reservasRoutes);
 
 app.get("/", (req, res) => {
   res.json({
