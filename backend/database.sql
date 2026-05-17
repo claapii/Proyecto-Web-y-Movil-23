@@ -126,17 +126,6 @@ VALUES
 (4, '📄', 'Documentación legal'),
 (4, '💼', 'Inicio de actividades');
 
-/* =========================================================
-   INSERT USUARIO PRUEBA
-========================================================= */
-
-INSERT INTO usuarios
-(nombre, apellido, correo, rut, password)
-VALUES
-(
-  'Admin',
-  'Municipal',
-  'admin@munidigital.cl',
-  '11.111.111-1',
-  '1234'
-);
+/* ======================================================================
+   INSERT USUARIO PRUEBA: Registrar usuario de manera manual para testeo
+========================================================================= */

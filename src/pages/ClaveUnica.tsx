@@ -5,6 +5,10 @@ import {
   IonButton
 } from '@ionic/react';
 
+import { loginClaveUnica } from '../services/authService';
+import { useState } from 'react';
+import { useHistory } from 'react-router';
+import { IonItem } from '@ionic/react';
 import './ClaveUnica.css';
 
 /*
@@ -14,6 +18,35 @@ import './ClaveUnica.css';
 */
 
 const ClaveUnica: React.FC = () => {
+  const history = useHistory();
+  const [rut, setRut] = useState("");
+  const [password, setPassword] = useState("");
+  const handleLogin = async () => {
+
+    try {
+
+      const response = await loginClaveUnica(
+        rut,
+        password
+      );
+
+      localStorage.setItem(
+        "token",
+        response.token
+      );
+
+      alert("Login exitoso");
+
+      history.push("/home");
+
+    } catch (error) {
+
+      alert("Credenciales incorrectas");
+
+      console.error(error);
+    }
+  };
+
   return (
     <IonPage>
 
@@ -47,18 +80,22 @@ const ClaveUnica: React.FC = () => {
               Requiere autenticación
             </p>
 
-            {/*Campo RUN*/}
-            <IonInput
-              className="cu-input"
-              placeholder="Ingresa tu RUN"
-            />
+            {/*Campo correo electrónico*/}
+            <IonItem>
+              <IonInput
+                placeholder="RUN"
+                onIonChange={(e) => setRut(e.detail.value!)}
+              />
+            </IonItem>
 
             {/*Campo contraseña*/}
-            <IonInput
-              className="cu-input"
-              type="password"
-              placeholder="Ingresa tu Clave"
-            />
+            <IonItem>
+              <IonInput
+                type="password"
+                placeholder="Contraseña"
+                onIonChange={(e) => setPassword(e.detail.value!)}
+              />
+            </IonItem>
 
             {/*Recuperación de acceso*/}
             <p className="cu-link">
@@ -69,7 +106,7 @@ const ClaveUnica: React.FC = () => {
             <IonButton
               expand="block"
               className="cu-button"
-              routerLink="/home"
+              onClick={handleLogin}
             >
               Continuar
             </IonButton>

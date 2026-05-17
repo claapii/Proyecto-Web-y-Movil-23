@@ -7,7 +7,8 @@ import {
 } from '@ionic/react';
 
 import './Home.css';
-
+import { useEffect } from 'react';
+import { useHistory } from 'react-router';
 import NavBar from "../components/NavBar";
 
 /*
@@ -22,6 +23,16 @@ import NavBar from "../components/NavBar";
 */
 
 const Home: React.FC = () => {
+  const history = useHistory();
+  useEffect(() => {
+
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      history.push("/");
+    }
+
+  }, []);
   return (
     <IonPage>
 

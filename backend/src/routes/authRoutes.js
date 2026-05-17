@@ -2,6 +2,8 @@ const express = require("express");
 const pool = require("../config/db");
 
 const router = express.Router();
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 
 /* =========================================
    REGISTER
@@ -39,12 +41,13 @@ router.post("/register", async (req, res) => {
     }
 
     // Insertar usuario
+    const hashedPassword = await bcrypt.hash(password, 10);
     const result = await pool.query(
       `INSERT INTO usuarios
       (nombre, apellido, correo, rut, password)
       VALUES ($1, $2, $3, $4, $5)
       RETURNING *`,
-      [nombre, apellido, correo, rut, password]
+      [nombre, apellido, correo, rut, hashedPassword]
     );
 
     res.status(201).json({
@@ -97,17 +100,33 @@ router.post("/login", async (req, res) => {
     const usuario = result.rows[0];
 
     // Validar contraseña
-    if (usuario.password !== password) {
+    const passwordValida = await bcrypt.compare(
+      password,
+      usuario.password
+    );
+
+    if (!passwordValida) {
       return res.status(401).json({
         success: false,
         message: "Contraseña incorrecta"
       });
     }
 
-    // Login exitoso
+    //Token JWT
+    const token = jwt.sign(
+      {
+        id: usuario.id_usuario,
+        correo: usuario.correo
+      },
+      "clave_secreta",
+      { expiresIn: "2h" }
+    );
+
+    //Login exitoso
     res.status(200).json({
       success: true,
-      message: "Inicio de sesión exitoso",
+      message: "Login exitoso",
+      token,
       data: usuario
     });
 
@@ -121,5 +140,69 @@ router.post("/login", async (req, res) => {
 
   }
 });
+
+/* =========================================
+   CLAVE ÚNICA
+========================================= */
+router.post("/claveunica", async (req, res) => {
+
+  try {
+    console.log(req.body);
+    const { rut, password } = req.body;
+
+    const result = await pool.query(
+      "SELECT * FROM usuarios WHERE rut = $1",
+      [rut]
+    );
+
+    console.log(result.rows);
+    
+    if (result.rows.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: "Usuario no encontrado"
+      });
+    }
+
+    const usuario = result.rows[0];
+
+    const passwordValida = await bcrypt.compare(
+      password,
+      usuario.password
+    );
+
+    if (!passwordValida) {
+      return res.status(401).json({
+        success: false,
+        message: "Contraseña incorrecta"
+      });
+    }
+
+    const token = jwt.sign(
+      {
+        id: usuario.id_usuario,
+        rut: usuario.rut
+      },
+      "clave_secreta",
+      { expiresIn: "2h" }
+    );
+
+    res.status(200).json({
+      success: true,
+      message: "Login ClaveÚnica exitoso",
+      token,
+      data: usuario
+    });
+
+  } catch (error) {
+
+    res.status(500).json({
+      success: false,
+      message: "Error en ClaveÚnica",
+      error: error.message
+    });
+  }
+});
+
 
 module.exports = router;

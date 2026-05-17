@@ -7,6 +7,9 @@ import {
 } from '@ionic/react';
 
 import './Login.css';
+import { useState } from 'react';
+import { useHistory } from 'react-router';
+import { loginUsuario } from "../services/authService"; //Manejo de token
 
 /*
  * Página principal de inicio de sesión.
@@ -19,6 +22,36 @@ import './Login.css';
 */
 
 const Login: React.FC = () => {
+
+  const history = useHistory();
+  const [correo, setCorreo] = useState("");
+  const [password, setPassword] = useState("");
+  const handleLogin = async () => {
+
+    try {
+
+      const response = await loginUsuario(
+        correo,
+        password
+      );
+
+      localStorage.setItem(
+        "token",
+        response.token
+      );
+
+      alert("Login exitoso");
+
+      history.push("/home");
+
+    } catch (error) {
+
+      alert("Credenciales incorrectas");
+
+      console.error(error);
+    }
+  };
+
   return (
     <IonPage>
 
@@ -43,28 +76,26 @@ const Login: React.FC = () => {
 
             {/*Campo correo electrónico*/}
             <IonItem>
-
               <IonInput
                 placeholder="Correo electrónico"
+                onIonChange={(e) => setCorreo(e.detail.value!)}
               />
-
             </IonItem>
 
             {/*Campo contraseña*/}
             <IonItem>
-
               <IonInput
                 type="password"
                 placeholder="Contraseña"
+                onIonChange={(e) => setPassword(e.detail.value!)}
               />
-
             </IonItem>
 
             {/*Botón de acceso principal*/}
             <IonButton
               expand="block"
               className="primary-btn"
-              routerLink="/home"
+              onClick={handleLogin}
             >
               Iniciar sesión
             </IonButton>
