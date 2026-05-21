@@ -67,6 +67,27 @@ CREATE TABLE reservas (
     REFERENCES tramites(id_tramite)
 );
 
+/* -------------------------
+   TABLA HORARIOS
+------------------------- */
+
+CREATE TABLE horarios (
+
+    id_horario SERIAL PRIMARY KEY,
+
+    id_tramite INT NOT NULL,
+
+    fecha DATE NOT NULL,
+
+    hora TIME NOT NULL,
+
+    disponible BOOLEAN DEFAULT true,
+
+    FOREIGN KEY (id_tramite)
+    REFERENCES tramites(id_tramite)
+    ON DELETE CASCADE
+);
+
 /* =========================================================
    INSERTS - TRÁMITES
 ========================================================= */
@@ -126,6 +147,56 @@ VALUES
 (4, '📄', 'Documentación legal'),
 (4, '💼', 'Inicio de actividades');
 
+/* =========================================================
+   INSERTS - HORARIOS
+========================================================= */
+
+INSERT INTO horarios
+(id_tramite, fecha, hora, disponible)
+VALUES
+
+/* Licencia de conducir */
+(1, '2026-05-25', '09:00', true),
+(1, '2026-05-25', '10:00', true),
+(1, '2026-05-25', '11:00', true),
+(1, '2026-05-25', '12:00', true),
+
+(1, '2026-05-26', '09:30', true),
+(1, '2026-05-26', '10:30', true),
+(1, '2026-05-26', '11:30', true),
+
+(1, '2026-05-27', '08:30', true),
+(1, '2026-05-27', '09:30', true),
+(1, '2026-05-27', '10:30', true),
+
+/* Permiso de circulación */
+(2, '2026-05-28', '14:00', true),
+(2, '2026-05-28', '15:00', true),
+(2, '2026-05-28', '16:00', true),
+
+(2, '2026-05-29', '13:30', true),
+(2, '2026-05-29', '14:30', true),
+(2, '2026-05-29', '15:30', true),
+
+/* Patente comercial */
+(3, '2026-05-30', '10:00', true),
+(3, '2026-05-30', '11:00', true),
+(3, '2026-05-30', '12:00', true),
+
+(3, '2026-05-31', '09:00', true),
+(3, '2026-05-31', '10:00', true),
+(3, '2026-05-31', '11:00', true),
+
+/* Subsidios */
+(4, '2026-06-01', '08:00', true),
+(4, '2026-06-01', '09:00', true),
+(4, '2026-06-01', '10:00', true),
+
+(4, '2026-06-02', '11:00', true),
+(4, '2026-06-02', '12:00', true),
+(4, '2026-06-02', '13:00', true);
+
 /* ======================================================================
    INSERT USUARIO PRUEBA: Registrar usuario de manera manual para testeo
 ========================================================================= */
+

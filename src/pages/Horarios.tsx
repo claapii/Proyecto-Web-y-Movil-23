@@ -7,95 +7,123 @@ import {
 
 import './Horarios.css';
 
-import { useState } from 'react';
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 
 import NavBar from "../components/NavBar";
 
+import {
+  obtenerHorarios,
+  reservarHorario
+} from "../services/horariosService";
+
 /*
  * Página de selección de horarios.
- * Permite visualizar disponibilidad
- * y agendar una hora para un trámite.
+ * Obtiene horarios dinámicamente
+ * desde PostgreSQL mediante backend.
 */
 
 const Horarios: React.FC = () => {
 
-  /*
-   * Estado que almacena
-   * el horario actualmente seleccionado.
-  */
+  /* ID trámite desde URL */
+  const { id } = useParams<{ id: string }>();
+
+  /* Lista de horarios */
+  const [horarios, setHorarios] = useState<any[]>([]);
+
+  /* Horario seleccionado */
   const [horarioSeleccionado, setHorarioSeleccionado] =
-    useState<string>('22 ABR - 9:30');
+    useState("");
+
+  /* ID horario seleccionado */
+  const [
+    idHorarioSeleccionado,
+    setIdHorarioSeleccionado
+  ] = useState<number | null>(null);
 
   /*
-   * Datos temporales de horarios disponibles.
-   * Simulan información obtenida desde backend.
+   * Carga horarios desde backend
   */
-  const dias = [
+  useEffect(() => {
 
-    {
-      dia: '21',
+    const cargarHorarios = async () => {
 
-      mes: 'ABR',
+      try {
 
-      horarios: ['8:30', '-', '-', '-', '-', '11:00']
-    },
+        const data = await obtenerHorarios(id);
 
-    {
-      dia: '22',
+        setHorarios(data);
 
-      mes: 'ABR',
+      } catch (error) {
 
-      horarios: ['8:30', '9:00', '9:30', '10:00', '-', '-']
-    },
+        console.error(error);
+      }
+    };
 
-    {
-      dia: '23',
+    cargarHorarios();
 
-      mes: 'ABR',
-
-      horarios: ['8:30', '-', '9:30', '-', '10:30', '-']
-    },
-
-    {
-      dia: '24',
-
-      mes: 'ABR',
-
-      horarios: ['8:30', '9:00', '-', '10:00', '10:30', '-']
-    },
-
-    {
-      dia: '25',
-
-      mes: 'ABR',
-
-      horarios: ['8:30', '-', '-', '-', '10:30', '-']
-    }
-  ];
+  }, [id]);
 
   /*
-   * Función para actualizar
-   * el horario seleccionado.
+   * Selección de horario
   */
   const seleccionarHorario = (
-    dia: string,
-    mes: string,
+    id_horario: number,
+    fecha: string,
     hora: string
   ) => {
 
-    if (hora !== '-') {
+    setIdHorarioSeleccionado(
+      id_horario
+    );
 
-      setHorarioSeleccionado(
-        `${dia} ${mes} - ${hora}`
+    setHorarioSeleccionado(
+      `${fecha} - ${hora}`
+    );
+  };
+
+  /*
+   * Agrupa horarios por fecha
+  */
+  const horariosAgrupados = horarios.reduce(
+    (acc: any, horario: any) => {
+
+      const fechaObj = new Date(horario.fecha);
+
+      const dia = fechaObj.toLocaleDateString(
+        "es-CL",
+        {
+          day: "numeric"
+        }
       );
 
-    }
-  };
+      const mes = fechaObj
+        .toLocaleDateString(
+          "es-CL",
+          {
+            month: "short"
+          }
+        )
+        .replace(".", "")
+        .toUpperCase();
+
+      const claveFecha = `${dia}-${mes}`;
+
+      if (!acc[claveFecha]) {
+        acc[claveFecha] = [];
+      }
+
+      acc[claveFecha].push(horario);
+
+      return acc;
+
+    }, {}
+  );
 
   return (
     <IonPage>
 
-      {/*Header superior reutilizable*/}
+      {/*Header superior*/}
       <IonHeader>
 
         <IonToolbar className="toolbar">
@@ -115,101 +143,97 @@ const Horarios: React.FC = () => {
             Agenda de horarios
           </h1>
 
-          {/*Mes actual*/}
+          {/*Subtítulo*/}
           <h2 className="horarios-month">
-            Abril
+            Horarios disponibles
           </h2>
 
+          {/*Contenedor principal*/}
           <div className="calendar-container">
 
-            {/*Encabezado de días*/}
-            <div className="days-row">
-
-              {dias.map((item, index) => (
-
-                <div
-                  className="day-column-title"
-                  key={index}
-                >
-
-                  <h3>
-                    {item.dia}
-                  </h3>
-
-                  <p>
-                    {item.mes}
-                  </p>
-
-                </div>
-
-              ))}
-
-            </div>
-
-            {/*Separador visual*/}
-            <div className="divider"></div>
-
-            {/*Grilla de horarios*/}
+            {/*Grilla*/}
             <div className="schedule-grid">
 
-              {dias.map((item, index) => (
+              {Object.entries(horariosAgrupados).map(
+                ([fecha, horariosDelDia]: any) => {
 
-                <div
-                  className="schedule-column"
-                  key={index}
-                >
+                  const [dia, mes] =
+                    fecha.split("-");
 
-                  {item.horarios.map((hora, i) => {
+                  return (
 
-                    /*Verifica si el horario está seleccionado*/
-                    const seleccionado =
-                      horarioSeleccionado ===
-                      `${item.dia} ${item.mes} - ${hora}`;
+                    <div
+                      className="schedule-column"
+                      key={fecha}
+                    >
 
-                    return (
+                      {/*Fecha*/}
+                      <div className="day-column-title">
 
-                      <button
-                        key={i}
+                        <h3>{dia}</h3>
 
-                        className={
-                          hora === '-'
-                            ? 'time-btn unavailable'
-                            : seleccionado
-                              ? 'time-btn selected'
-                              : 'time-btn available'
+                        <p>{mes}</p>
+
+                      </div>
+
+                      {/*Horarios*/}
+                      {horariosDelDia.map(
+                        (horario: any) => {
+
+                          const horaFormateada =
+                            horario.hora.slice(0, 5);
+
+                          const seleccionado =
+                            horarioSeleccionado ===
+                            `${fecha} - ${horaFormateada}`;
+
+                          return (
+
+                            <button
+                              key={horario.id_horario}
+
+                              className={
+                                !horario.disponible
+                                  ? 'time-btn unavailable'
+                                  : seleccionado
+                                    ? 'time-btn selected'
+                                    : 'time-btn available'
+                              }
+
+                              disabled={
+                                !horario.disponible
+                              }
+
+                              onClick={() =>
+                                seleccionarHorario(
+                                  horario.id_horario,
+                                  fecha,
+                                  horaFormateada
+                                )
+                              }
+                            >
+
+                              {horaFormateada}
+
+                            </button>
+                          );
                         }
+                      )}
 
-                        disabled={hora === '-'}
-
-                        onClick={() =>
-                          seleccionarHorario(
-                            item.dia,
-                            item.mes,
-                            hora
-                          )
-                        }
-                      >
-
-                        {hora}
-
-                      </button>
-
-                    );
-                  })}
-
-                </div>
-
-              ))}
+                    </div>
+                  );
+                }
+              )}
 
             </div>
 
-            {/*Barra decorativa inferior*/}
+            {/*Barra decorativa*/}
             <div className="scroll-bar"></div>
 
-            {/*Footer de agenda*/}
+            {/*Footer*/}
             <div className="schedule-footer">
 
-              {/*Leyenda de estados*/}
+              {/*Leyenda*/}
               <div className="legend">
 
                 <div>
@@ -228,17 +252,9 @@ const Horarios: React.FC = () => {
 
                 </div>
 
-                <div>
-
-                  <span className="legend-dot unavailable-dot"></span>
-
-                  No disponible
-
-                </div>
-
               </div>
 
-              {/*Mensaje de confirmación*/}
+              {/*Mensaje*/}
               <div className="email-message">
 
                 Enviaremos un comprobante de la cita
@@ -246,10 +262,56 @@ const Horarios: React.FC = () => {
 
               </div>
 
-              {/*Resumen de selección*/}
+              {/*Confirmación*/}
               <div className="confirm-box">
 
-                <button className="confirm-btn">
+                <button
+                  className="confirm-btn"
+
+                  onClick={async () => {
+
+                    if (!idHorarioSeleccionado) {
+
+                      alert(
+                        "Selecciona un horario"
+                      );
+
+                      return;
+                    }
+
+                    try {
+
+                      await reservarHorario(
+                        idHorarioSeleccionado
+                      );
+
+                      alert(
+                        "Horario reservado correctamente"
+                      );
+
+                      /* Recarga horarios */
+                      const data =
+                        await obtenerHorarios(id);
+
+                      setHorarios(data);
+
+                      /* Limpia selección */
+                      setHorarioSeleccionado("");
+
+                      setIdHorarioSeleccionado(
+                        null
+                      );
+
+                    } catch (error) {
+
+                      console.error(error);
+
+                      alert(
+                        "Error al reservar horario"
+                      );
+                    }
+                  }}
+                >
                   Aceptar
                 </button>
 
@@ -258,7 +320,7 @@ const Horarios: React.FC = () => {
                 </p>
 
                 <strong>
-                  {horarioSeleccionado}
+                  {horarioSeleccionado || "Ninguno"}
                 </strong>
 
               </div>
