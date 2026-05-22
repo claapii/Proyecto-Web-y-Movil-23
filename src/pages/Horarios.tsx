@@ -281,7 +281,15 @@ const Horarios: React.FC = () => {
 
                     try {
 
+                      const token = localStorage.getItem("token");
+
+                      if (!token) {
+                        alert("Debes iniciar sesión para reservar");
+                        return;
+                      }
+
                       await reservarHorario(
+                        Number(id),
                         idHorarioSeleccionado
                       );
 

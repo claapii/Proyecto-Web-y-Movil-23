@@ -1,13 +1,14 @@
 import axios from "axios";
 
-const API_URL = "http://localhost:3000/api/horarios";
+const API_HORARIOS = "http://localhost:3000/api/horarios";
+const API_RESERVAS = "http://localhost:3000/api/reservas";
 
 export const obtenerHorarios = async (
   id_tramite: string
 ) => {
 
   const response = await axios.get(
-    `${API_URL}/${id_tramite}`
+    `${API_HORARIOS}/${id_tramite}`
   );
 
   console.log(response.data);
@@ -15,12 +16,25 @@ export const obtenerHorarios = async (
   return response.data.data;
 };
 
-export const reservarHorario =
-  async (id_horario: number) => {
+export const reservarHorario = async (
+  id_tramite: number,
+  id_horario: number
+) => {
 
-    const response = await axios.put(
-      `${API_URL}/${id_horario}`
-    );
+  const token = localStorage.getItem("token");
 
-    return response.data;
+  const response = await axios.post(
+    API_RESERVAS,
+    {
+      id_tramite,
+      id_horario
+    },
+    {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    }
+  );
+
+  return response.data;
 };

@@ -29,3 +29,13 @@ yarn-error.log*
 
 # Optional eslint cache
 .eslintcache
+
+# Optional eslint cache
+.eslintcache
+
+# environment variables
+.env
+backend/.env
+
+# backend dependencies
+backend/node_modules/

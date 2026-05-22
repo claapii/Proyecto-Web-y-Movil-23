@@ -40,6 +40,11 @@ const Login: React.FC = () => {
         response.token
       );
 
+      localStorage.setItem(
+        "usuario",
+        JSON.stringify(response.data)
+      );
+
       alert("Login exitoso");
 
       history.push("/home");

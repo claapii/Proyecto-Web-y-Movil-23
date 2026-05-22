@@ -1,16 +1,15 @@
 const express = require("express");
 const pool = require("../config/db");
-
-const router = express.Router();
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+
+const router = express.Router();
 
 /* =========================================
    REGISTER
 ========================================= */
 router.post("/register", async (req, res) => {
   try {
-
     const {
       nombre,
       apellido,
@@ -27,27 +26,45 @@ router.post("/register", async (req, res) => {
       });
     }
 
-    // Verificar si usuario ya existe
+    // Validación básica de correo
+    if (!correo.includes("@")) {
+      return res.status(400).json({
+        success: false,
+        message: "Correo electrónico inválido"
+      });
+    }
+
+    // Validación básica de contraseña
+    if (password.length < 6) {
+      return res.status(400).json({
+        success: false,
+        message: "La contraseña debe tener al menos 6 caracteres"
+      });
+    }
+
+    // Verificar si usuario ya existe por correo o RUT
     const usuarioExiste = await pool.query(
-      "SELECT * FROM usuarios WHERE correo = $1",
-      [correo]
+      "SELECT id_usuario FROM usuarios WHERE correo = $1 OR rut = $2",
+      [correo, rut]
     );
 
     if (usuarioExiste.rows.length > 0) {
       return res.status(409).json({
         success: false,
-        message: "El usuario ya existe"
+        message: "El correo o RUT ya se encuentra registrado"
       });
     }
 
-    // Insertar usuario
+    // Encriptar contraseña
     const hashedPassword = await bcrypt.hash(password, 10);
+
+    // Insertar usuario
     const result = await pool.query(
       `INSERT INTO usuarios
-      (nombre, apellido, correo, rut, password)
-      VALUES ($1, $2, $3, $4, $5)
-      RETURNING *`,
-      [nombre, apellido, correo, rut, hashedPassword]
+      (nombre, apellido, correo, rut, password_hash, id_rol, rol)
+      VALUES ($1, $2, $3, $4, $5, $6, $7)
+      RETURNING id_usuario, nombre, apellido, correo, rut, id_rol, rol`,
+      [nombre, apellido, correo, rut, hashedPassword, 2, "usuario"]
     );
 
     res.status(201).json({
@@ -57,13 +74,10 @@ router.post("/register", async (req, res) => {
     });
 
   } catch (error) {
-
     res.status(500).json({
       success: false,
-      message: "Error al registrar usuario",
-      error: error.message
+      message: "Error al registrar usuario"
     });
-
   }
 });
 
@@ -72,7 +86,6 @@ router.post("/register", async (req, res) => {
 ========================================= */
 router.post("/login", async (req, res) => {
   try {
-
     const { correo, password } = req.body;
 
     // Validación básica
@@ -91,9 +104,9 @@ router.post("/login", async (req, res) => {
 
     // Usuario no existe
     if (result.rows.length === 0) {
-      return res.status(404).json({
+      return res.status(401).json({
         success: false,
-        message: "Usuario no encontrado"
+        message: "Credenciales inválidas"
       });
     }
 
@@ -102,42 +115,47 @@ router.post("/login", async (req, res) => {
     // Validar contraseña
     const passwordValida = await bcrypt.compare(
       password,
-      usuario.password
+      usuario.password_hash
     );
 
     if (!passwordValida) {
       return res.status(401).json({
         success: false,
-        message: "Contraseña incorrecta"
+        message: "Credenciales inválidas"
       });
     }
 
-    //Token JWT
+    // Generar token JWT
     const token = jwt.sign(
       {
         id: usuario.id_usuario,
-        correo: usuario.correo
+        correo: usuario.correo,
+        rol: usuario.rol || "usuario"
       },
-      "clave_secreta",
+      process.env.JWT_SECRET,
       { expiresIn: "2h" }
     );
 
-    //Login exitoso
+    // Login exitoso
     res.status(200).json({
       success: true,
       message: "Login exitoso",
       token,
-      data: usuario
+      data: {
+        id_usuario: usuario.id_usuario,
+        nombre: usuario.nombre,
+        apellido: usuario.apellido,
+        correo: usuario.correo,
+        rut: usuario.rut,
+        rol: usuario.rol || "usuario"
+      }
     });
 
   } catch (error) {
-
     res.status(500).json({
       success: false,
-      message: "Error al iniciar sesión",
-      error: error.message
+      message: "Error al iniciar sesión"
     });
-
   }
 });
 
@@ -145,64 +163,78 @@ router.post("/login", async (req, res) => {
    CLAVE ÚNICA
 ========================================= */
 router.post("/claveunica", async (req, res) => {
-
   try {
-    console.log(req.body);
     const { rut, password } = req.body;
 
+    // Validación básica
+    if (!rut || !password) {
+      return res.status(400).json({
+        success: false,
+        message: "RUT y contraseña son obligatorios"
+      });
+    }
+
+    // Buscar usuario por RUT
     const result = await pool.query(
       "SELECT * FROM usuarios WHERE rut = $1",
       [rut]
     );
 
-    console.log(result.rows);
-    
+    // Usuario no existe
     if (result.rows.length === 0) {
-      return res.status(404).json({
+      return res.status(401).json({
         success: false,
-        message: "Usuario no encontrado"
+        message: "Credenciales inválidas"
       });
     }
 
     const usuario = result.rows[0];
 
+    // Validar contraseña
     const passwordValida = await bcrypt.compare(
       password,
-      usuario.password
+      usuario.password_hash
     );
 
     if (!passwordValida) {
       return res.status(401).json({
         success: false,
-        message: "Contraseña incorrecta"
+        message: "Credenciales inválidas"
       });
     }
 
+    // Generar token JWT
     const token = jwt.sign(
       {
         id: usuario.id_usuario,
-        rut: usuario.rut
+        rut: usuario.rut,
+        rol: usuario.rol || "usuario"
       },
-      "clave_secreta",
+      process.env.JWT_SECRET,
       { expiresIn: "2h" }
     );
 
+    // Login ClaveÚnica exitoso
     res.status(200).json({
       success: true,
       message: "Login ClaveÚnica exitoso",
       token,
-      data: usuario
+      data: {
+        id_usuario: usuario.id_usuario,
+        nombre: usuario.nombre,
+        apellido: usuario.apellido,
+        correo: usuario.correo,
+        rut: usuario.rut,
+        rol: usuario.rol || "usuario"
+      }
     });
 
   } catch (error) {
-
     res.status(500).json({
       success: false,
-      message: "Error en ClaveÚnica",
-      error: error.message
+      message: "Error en ClaveÚnica"
     });
   }
 });
-
 
 module.exports = router;
