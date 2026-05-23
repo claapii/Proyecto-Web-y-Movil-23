@@ -27,7 +27,8 @@ router.post("/register", async (req, res) => {
     }
 
     // Validación básica de correo
-    if (!correo.includes("@")) {
+    const correoRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!correoRegex.test(correo)) {
       return res.status(400).json({
         success: false,
         message: "Correo electrónico inválido"
@@ -39,6 +40,23 @@ router.post("/register", async (req, res) => {
       return res.status(400).json({
         success: false,
         message: "La contraseña debe tener al menos 6 caracteres"
+      });
+    }
+
+    //Validación de rut chileno
+    const rutRegex = /^\d{1,2}\.\d{3}\.\d{3}[-][0-9kK]$/;
+    if (!rutRegex.test(rut)) {
+      return res.status(400).json({
+        success: false,
+        message: "RUT inválido, debe tener el formato 12.345.678-9"
+      });
+    }
+
+    //Validación de nombre y apellido
+    if (nombre.length < 2 || apellido.length < 2) {
+      return res.status(400).json({
+        success: false,
+        message: "El nombre y apellido deben tener al menos 2 caracteres"
       });
     }
 
@@ -61,10 +79,10 @@ router.post("/register", async (req, res) => {
     // Insertar usuario
     const result = await pool.query(
       `INSERT INTO usuarios
-      (nombre, apellido, correo, rut, password_hash, id_rol, rol)
-      VALUES ($1, $2, $3, $4, $5, $6, $7)
-      RETURNING id_usuario, nombre, apellido, correo, rut, id_rol, rol`,
-      [nombre, apellido, correo, rut, hashedPassword, 2, "usuario"]
+      (nombre, apellido, correo, rut, password_hash, rol)
+      VALUES ($1, $2, $3, $4, $5, $6)
+      RETURNING id_usuario, nombre, apellido, correo, rut, rol`,
+      [nombre, apellido, correo, rut, hashedPassword, "usuario"]
     );
 
     res.status(201).json({

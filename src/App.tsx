@@ -15,6 +15,7 @@ import Detalle from './pages/Detalle';
 import Register from './pages/Register';
 import ClaveUnica from './pages/ClaveUnica';
 import Oficinas from './pages/Oficinas';
+import PrivateRoute from './components/PrivateRoute';
 
 
 /* Core CSS required for Ionic components to work properly */
@@ -45,22 +46,20 @@ const App: React.FC = () => (
       <IonRouterOutlet>     
 
         <Route path="/login" component={Login} exact />
-
+        <Route path="/register" component={Register} exact />
+        <Route path="/clave-unica" component={ClaveUnica} exact/>
         <Route exact path="/" render={() => <Redirect to="/login" />} />
 
-        <Route path="/home" component={Home} exact />
 
-        <Route path="/tramites" component={Tramites} exact />
+        <PrivateRoute path="/home" component={Home} exact />
 
-        <Route path="/oficinas" component={Oficinas} exact/>
+        <PrivateRoute path="/tramites" component={Tramites} exact />
 
-        <Route path="/detalle/:id" component={Detalle} exact />
+        <PrivateRoute path="/oficinas" component={Oficinas} exact/>
 
-        <Route path="/horarios/:id" component={Horarios} exact />
-        
-        <Route path="/register" component={Register} exact />
-      
-        <Route path="/clave-unica" component={ClaveUnica} exact/>
+        <PrivateRoute path="/detalle/:id" component={Detalle} exact />
+
+        <PrivateRoute path="/horarios/:id" component={Horarios} exact />
         
       </IonRouterOutlet>
     </IonReactRouter>

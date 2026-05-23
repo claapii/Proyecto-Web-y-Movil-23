@@ -82,7 +82,7 @@ const Register: React.FC = () => {
             <IonItem>
               <IonInput
                 placeholder="Nombre"
-                onIonChange={(e) => setNombre(e.detail.value!)}
+                onIonInput={(e) => setNombre(e.detail.value!)}
               />
             </IonItem>
 
@@ -90,7 +90,7 @@ const Register: React.FC = () => {
             <IonItem>
               <IonInput
                 placeholder="Apellido"
-                onIonChange={(e) => setApellido(e.detail.value!)}
+                onIonInput={(e) => setApellido(e.detail.value!)}
               />
             </IonItem>
 
@@ -98,7 +98,7 @@ const Register: React.FC = () => {
             <IonItem>
               <IonInput
                 placeholder="Correo electrónico"
-                onIonChange={(e) => setCorreo(e.detail.value!)}
+                onIonInput={(e) => setCorreo(e.detail.value!)}
               />
             </IonItem>
 
@@ -106,7 +106,7 @@ const Register: React.FC = () => {
             <IonItem>
               <IonInput
                 placeholder="RUT"
-                onIonChange={(e) => setRut(e.detail.value!)}
+                onIonInput={(e) => setRut(e.detail.value!)}
               />
             </IonItem>
 
@@ -115,7 +115,7 @@ const Register: React.FC = () => {
               <IonInput
                 type="password"
                 placeholder="Contraseña"
-                onIonChange={(e) => setPassword(e.detail.value!)}
+                onIonInput={(e) => setPassword(e.detail.value!)}
               />
             </IonItem>
 
@@ -124,7 +124,7 @@ const Register: React.FC = () => {
               <IonInput
                 type="password"
                 placeholder="Confirmar contraseña"
-                onIonChange={(e) => setConfirmPassword(e.detail.value!)}
+                onIonInput={(e) => setConfirmPassword(e.detail.value!)}
               />
             </IonItem>
 

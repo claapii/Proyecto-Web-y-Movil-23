@@ -14,7 +14,7 @@ CREATE TABLE usuarios (
     correo VARCHAR(150) UNIQUE NOT NULL,
     rut VARCHAR(20) UNIQUE NOT NULL,
 
-    password VARCHAR(255) NOT NULL
+    password_hash VARCHAR(255) NOT NULL,
 
     rol VARCHAR(20) DEFAULT 'usuario' NOT NULL
 );
@@ -52,21 +52,28 @@ CREATE TABLE requisitos (
    TABLA RESERVAS
 ------------------------- */
 CREATE TABLE reservas (
+
     id_reserva SERIAL PRIMARY KEY,
 
     id_usuario INT NOT NULL,
     id_tramite INT NOT NULL,
+    id_horario INT NOT NULL,
 
-    fecha VARCHAR(50) NOT NULL,
-    hora VARCHAR(20) NOT NULL,
+    estado VARCHAR(20) DEFAULT 'pendiente',
 
-    estado VARCHAR(30) DEFAULT 'pendiente',
+    creado_en TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
-    FOREIGN KEY (id_usuario)
-    REFERENCES usuarios(id_usuario),
+    CONSTRAINT fk_usuario
+      FOREIGN KEY (id_usuario)
+      REFERENCES usuarios(id_usuario),
 
-    FOREIGN KEY (id_tramite)
-    REFERENCES tramites(id_tramite)
+    CONSTRAINT fk_tramite
+      FOREIGN KEY (id_tramite)
+      REFERENCES tramites(id_tramite),
+
+    CONSTRAINT fk_horario
+      FOREIGN KEY (id_horario)
+      REFERENCES horarios(id_horario)
 );
 
 /* -------------------------
@@ -88,6 +95,26 @@ CREATE TABLE horarios (
     FOREIGN KEY (id_tramite)
     REFERENCES tramites(id_tramite)
     ON DELETE CASCADE
+);
+
+/* -------------------------
+   TABLA ROLES
+------------------------- */
+CREATE TABLE roles (
+    id_rol SERIAL PRIMARY KEY,
+    nombre VARCHAR(50) NOT NULL
+);
+
+
+/* -------------------------
+   TABLA OFICINAS
+------------------------- */
+CREATE TABLE oficinas (
+    id_oficina SERIAL PRIMARY KEY,
+    nombre VARCHAR(100) NOT NULL,
+    direccion VARCHAR(150) NOT NULL,
+    horario VARCHAR(100) NOT NULL,
+    telefono VARCHAR(20)
 );
 
 /* =========================================================
@@ -197,6 +224,29 @@ VALUES
 (4, '2026-06-02', '11:00', true),
 (4, '2026-06-02', '12:00', true),
 (4, '2026-06-02', '13:00', true);
+
+
+/* =========================================================
+   INSERTS - ROLES
+========================================================= */
+INSERT INTO roles 
+(nombre) 
+VALUES
+('usuario'),
+('funcionario'),
+('admin');
+
+
+/* =========================================================
+   INSERTS - OFICINAS
+========================================================= */
+INSERT INTO oficinas 
+(nombre, direccion, horario, telefono) 
+VALUES
+('Oficina Central', 'Av. Principal 123', 'Lunes a Viernes 08:30 - 17:30', '600 329 932'),
+('Dirección de Tránsito', 'Calle Tránsito 456', 'Lunes a Viernes 09:00 - 14:00', '600 329 933'),
+('Centro Médico Municipal', 'Calle Salud 789', 'Lunes a Viernes 08:00 - 16:00', '600 329 934'),
+('Departamento de Patentes', 'Av. Comercio 321', 'Lunes a Viernes 09:00 - 15:00', '600 329 935');
 
 /* ======================================================================
    INSERT USUARIO PRUEBA: Registrar usuario de manera manual para testeo

@@ -1,6 +1,9 @@
 const express = require("express");
 const pool = require("../config/db");
 
+const verificarToken = require("../middleware/authMiddleware");
+const { verificarAdmin } = require("../middleware/roleMiddleware");
+
 const router = express.Router();
 
 /* GET - Obtener todas las oficinas */
@@ -58,7 +61,7 @@ router.get("/:id", async (req, res) => {
 });
 
 /* POST - Crear una nueva oficina */
-router.post("/", async (req, res) => {
+router.post("/", verificarToken, verificarAdmin, async (req, res) => {
   try {
     const { nombre, direccion, horario, telefono } = req.body;
 
@@ -92,7 +95,7 @@ router.post("/", async (req, res) => {
 });
 
 /* PUT - Actualizar una oficina */
-router.put("/:id", async (req, res) => {
+router.put("/:id", verificarToken, verificarAdmin, async (req, res) => {
   try {
     const { id } = req.params;
     const { nombre, direccion, horario, telefono } = req.body;
@@ -138,7 +141,7 @@ router.put("/:id", async (req, res) => {
 });
 
 /* DELETE - Eliminar una oficina */
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", verificarToken, verificarAdmin, async (req, res) => {
   try {
     const { id } = req.params;
 

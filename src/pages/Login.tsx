@@ -83,7 +83,7 @@ const Login: React.FC = () => {
             <IonItem>
               <IonInput
                 placeholder="Correo electrónico"
-                onIonChange={(e) => setCorreo(e.detail.value!)}
+                onIonInput={(e) => setCorreo(e.detail.value!)}
               />
             </IonItem>
 
@@ -92,7 +92,7 @@ const Login: React.FC = () => {
               <IonInput
                 type="password"
                 placeholder="Contraseña"
-                onIonChange={(e) => setPassword(e.detail.value!)}
+                onIonInput={(e) => setPassword(e.detail.value!)}
               />
             </IonItem>
 

@@ -84,7 +84,7 @@ const ClaveUnica: React.FC = () => {
             <IonItem>
               <IonInput
                 placeholder="RUN"
-                onIonChange={(e) => setRut(e.detail.value!)}
+                onIonInput={(e) => setRut(e.detail.value!)}
               />
             </IonItem>
 
@@ -93,7 +93,7 @@ const ClaveUnica: React.FC = () => {
               <IonInput
                 type="password"
                 placeholder="Contraseña"
-                onIonChange={(e) => setPassword(e.detail.value!)}
+                onIonInput={(e) => setPassword(e.detail.value!)}
               />
             </IonItem>
 

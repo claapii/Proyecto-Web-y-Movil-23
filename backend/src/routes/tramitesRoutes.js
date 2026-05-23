@@ -1,6 +1,9 @@
 const express = require("express");
 const pool = require("../config/db");
 
+const verificarToken = require("../middleware/authMiddleware");
+const { verificarAdmin } = require("../middleware/roleMiddleware");
+
 const router = express.Router();
 
 /* GET - Obtener todos los trámites */
@@ -68,7 +71,7 @@ router.get("/:id", async (req, res) => {
 });
 
 /* POST - Crear un nuevo trámite */
-router.post("/", async (req, res) => {
+router.post("/", verificarToken, verificarAdmin, async (req, res) => {
   try {
     const { titulo, descripcion, duracion, modalidad, ubicacion } = req.body;
 
@@ -102,7 +105,7 @@ router.post("/", async (req, res) => {
 });
 
 /* PUT - Actualizar un trámite */
-router.put("/:id", async (req, res) => {
+router.put("/:id", verificarToken, verificarAdmin, async (req, res) => {
   try {
     const { id } = req.params;
     const { titulo, descripcion, duracion, modalidad, ubicacion } = req.body;
@@ -149,7 +152,7 @@ router.put("/:id", async (req, res) => {
 });
 
 /* DELETE - Eliminar un trámite */
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", verificarToken, verificarAdmin, async (req, res) => {
   try {
     const { id } = req.params;
 
