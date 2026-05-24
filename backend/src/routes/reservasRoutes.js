@@ -8,6 +8,7 @@ const router = express.Router();
    CREAR RESERVA
 ========================================= */
 router.post("/", verificarToken, async (req, res) => {
+
   const client = await pool.connect();
 
   try {
@@ -19,85 +20,163 @@ router.post("/", verificarToken, async (req, res) => {
       id_horario
     } = req.body;
 
-    // Validación básica
     if (!id_usuario || !id_tramite || !id_horario) {
+
       return res.status(400).json({
         success: false,
-        message: "id_tramite e id_horario son obligatorios"
+        message:
+          "id_tramite e id_horario son obligatorios"
       });
     }
 
-    // Iniciar transacción
+    /* =========================
+       INICIAR TRANSACCIÓN
+    ========================= */
+
     await client.query("BEGIN");
 
-    // Buscar horario y bloquearlo temporalmente para evitar reservas duplicadas
-    const horarioResult = await client.query(
-      `SELECT *
-       FROM horarios
-       WHERE id_horario = $1
-         AND id_tramite = $2
-       FOR UPDATE`,
-      [id_horario, id_tramite]
-    );
+    /* =========================
+       VALIDAR RESERVA DUPLICADA
+    ========================= */
 
-    // Horario no existe
-    if (horarioResult.rows.length === 0) {
-      await client.query("ROLLBACK");
+    const reservaExistente =
+      await client.query(
 
-      return res.status(404).json({
-        success: false,
-        message: "Horario no encontrado para este trámite"
-      });
-    }
+        `SELECT *
+         FROM reservas
+         WHERE id_usuario = $1
+           AND id_tramite = $2
+           AND estado = 'pendiente'`,
 
-    const horario = horarioResult.rows[0];
+        [id_usuario, id_tramite]
+      );
 
-    // Verificar disponibilidad del horario
-    if (!horario.disponible) {
+    if (reservaExistente.rows.length > 0) {
+
       await client.query("ROLLBACK");
 
       return res.status(409).json({
         success: false,
-        message: "El horario seleccionado ya no está disponible"
+        message:
+          "Ya tienes una reserva activa para este trámite"
       });
     }
 
-    // Insertar reserva
-    const reservaResult = await client.query(
-      `INSERT INTO reservas
-      (id_usuario, id_tramite, id_horario, estado)
-      VALUES ($1, $2, $3, $4)
-      RETURNING *`,
-      [id_usuario, id_tramite, id_horario, "pendiente"]
-    );
+    /* =========================
+       VALIDAR HORARIO
+    ========================= */
 
-    // Marcar horario como no disponible
+    const horarioResult =
+      await client.query(
+
+        `SELECT *
+         FROM horarios
+         WHERE id_horario = $1
+           AND id_tramite = $2
+         FOR UPDATE`,
+
+        [id_horario, id_tramite]
+      );
+
+    if (horarioResult.rows.length === 0) {
+
+      await client.query("ROLLBACK");
+
+      return res.status(404).json({
+        success: false,
+        message:
+          "Horario no encontrado"
+      });
+    }
+
+    const horario =
+      horarioResult.rows[0];
+
+    if (!horario.disponible) {
+
+      await client.query("ROLLBACK");
+
+      return res.status(409).json({
+        success: false,
+        message:
+          "El horario ya no está disponible"
+      });
+    }
+
+    /* =========================
+       INSERT RESERVA
+    ========================= */
+
+    const reservaResult =
+      await client.query(
+
+        `INSERT INTO reservas
+         (
+           id_usuario,
+           id_tramite,
+           id_horario,
+           estado
+         )
+         VALUES ($1, $2, $3, $4)
+         RETURNING *`,
+
+        [
+          id_usuario,
+          id_tramite,
+          id_horario,
+          "pendiente"
+        ]
+      );
+
+    /* =========================
+       BLOQUEAR HORARIO
+    ========================= */
+
     await client.query(
+
       `UPDATE horarios
        SET disponible = false
        WHERE id_horario = $1`,
+
       [id_horario]
     );
 
-    // Confirmar transacción
+    /* =========================
+       CONFIRMAR
+    ========================= */
+
     await client.query("COMMIT");
 
     res.status(201).json({
+
       success: true,
-      message: "Reserva creada correctamente",
-      data: reservaResult.rows[0]
+
+      message:
+        "Reserva creada correctamente",
+
+      data:
+        reservaResult.rows[0]
     });
 
   } catch (error) {
+
     await client.query("ROLLBACK");
 
+    console.error(error);
+
     res.status(500).json({
+
       success: false,
-      message: "Error al crear reserva",
-      error: error.message
+
+      message:
+        "Error al crear reserva",
+
+      error:
+        error.message
     });
 
   } finally {
+
     client.release();
   }
 });
@@ -137,6 +216,69 @@ router.get("/:id_usuario", verificarToken, async (req, res) => {
     res.status(500).json({
       success: false,
       message: "Error al obtener reservas",
+      error: error.message
+    });
+  }
+});
+
+/* =========================================
+   DETALLE RESERVA
+========================================= */
+router.get("/detalle/:id", verificarToken, async (req, res) => {
+
+  try {
+
+    const { id } = req.params;
+
+    const result = await pool.query(
+      `SELECT
+
+          r.id_reserva,
+          r.estado,
+
+          h.fecha,
+          h.hora,
+
+          t.titulo,
+
+          u.nombre,
+          u.apellido,
+          u.correo,
+          u.rut
+
+       FROM reservas r
+
+       JOIN horarios h
+         ON r.id_horario = h.id_horario
+
+       JOIN tramites t
+         ON r.id_tramite = t.id_tramite
+
+       JOIN usuarios u
+         ON r.id_usuario = u.id_usuario
+
+       WHERE r.id_reserva = $1`,
+      [id]
+    );
+
+    if (result.rows.length === 0) {
+
+      return res.status(404).json({
+        success: false,
+        message: "Reserva no encontrada"
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      data: result.rows[0]
+    });
+
+  } catch (error) {
+
+    res.status(500).json({
+      success: false,
+      message: "Error al obtener detalle reserva",
       error: error.message
     });
   }

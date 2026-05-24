@@ -7,15 +7,11 @@
 ------------------------- */
 CREATE TABLE usuarios (
     id_usuario SERIAL PRIMARY KEY,
-
     nombre VARCHAR(100) NOT NULL,
     apellido VARCHAR(100) NOT NULL,
-
     correo VARCHAR(150) UNIQUE NOT NULL,
     rut VARCHAR(20) UNIQUE NOT NULL,
-
     password_hash VARCHAR(255) NOT NULL,
-
     rol VARCHAR(20) DEFAULT 'usuario' NOT NULL
 );
 
@@ -24,10 +20,8 @@ CREATE TABLE usuarios (
 ------------------------- */
 CREATE TABLE tramites (
     id_tramite SERIAL PRIMARY KEY,
-
     titulo VARCHAR(100) NOT NULL,
     descripcion TEXT NOT NULL,
-
     duracion VARCHAR(50),
     modalidad VARCHAR(50),
     ubicacion VARCHAR(100)
@@ -38,12 +32,9 @@ CREATE TABLE tramites (
 ------------------------- */
 CREATE TABLE requisitos (
     id_requisito SERIAL PRIMARY KEY,
-
     id_tramite INT NOT NULL,
-
     icono VARCHAR(20),
     texto VARCHAR(255) NOT NULL,
-
     FOREIGN KEY (id_tramite)
     REFERENCES tramites(id_tramite)
 );
@@ -52,15 +43,11 @@ CREATE TABLE requisitos (
    TABLA RESERVAS
 ------------------------- */
 CREATE TABLE reservas (
-
     id_reserva SERIAL PRIMARY KEY,
-
     id_usuario INT NOT NULL,
     id_tramite INT NOT NULL,
     id_horario INT NOT NULL,
-
     estado VARCHAR(20) DEFAULT 'pendiente',
-
     creado_en TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT fk_usuario
@@ -81,17 +68,12 @@ CREATE TABLE reservas (
 ------------------------- */
 
 CREATE TABLE horarios (
-
     id_horario SERIAL PRIMARY KEY,
-
     id_tramite INT NOT NULL,
-
     fecha DATE NOT NULL,
-
     hora TIME NOT NULL,
-
     disponible BOOLEAN DEFAULT true,
-
+    
     FOREIGN KEY (id_tramite)
     REFERENCES tramites(id_tramite)
     ON DELETE CASCADE

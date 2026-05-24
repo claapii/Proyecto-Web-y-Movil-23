@@ -38,3 +38,21 @@ export const reservarHorario = async (
 
   return response.data;
 };
+
+export const obtenerDetalleReserva = async (
+  id_reserva: string
+) => {
+
+  const token = localStorage.getItem("token");
+
+  const response = await axios.get(
+    `${API_RESERVAS}/detalle/${id_reserva}`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    }
+  );
+
+  return response.data.data;
+};

@@ -9,6 +9,7 @@ import './Horarios.css';
 
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { useHistory } from 'react-router-dom';
 
 import NavBar from "../components/NavBar";
 
@@ -24,6 +25,8 @@ import {
 */
 
 const Horarios: React.FC = () => {
+
+  const history = useHistory();
 
   /* ID trámite desde URL */
   const { id } = useParams<{ id: string }>();
@@ -281,21 +284,28 @@ const Horarios: React.FC = () => {
 
                     try {
 
-                      const token = localStorage.getItem("token");
+                      const token =
+                        localStorage.getItem("token");
 
                       if (!token) {
-                        alert("Debes iniciar sesión para reservar");
+
+                        alert(
+                          "Debes iniciar sesión para reservar"
+                        );
+
                         return;
                       }
 
-                      await reservarHorario(
-                        Number(id),
-                        idHorarioSeleccionado
-                      );
+                      const response =
+                        await reservarHorario(
+                          Number(id),
+                          idHorarioSeleccionado
+                        );
 
-                      alert(
-                        "Horario reservado correctamente"
-                      );
+                      console.log(response);
+
+                      const idReserva =
+                        response.data.id_reserva;
 
                       /* Recarga horarios */
                       const data =
@@ -310,13 +320,20 @@ const Horarios: React.FC = () => {
                         null
                       );
 
-                    } catch (error) {
+                      /* Ir al detalle */
+                      history.push(
+                        `/reserva/${idReserva}`
+                      );
+
+                    } catch (error: any) {
 
                       console.error(error);
 
-                      alert(
-                        "Error al reservar horario"
-                      );
+                      const mensaje =
+                        error.response?.data?.message ||
+                        "Error al reservar horario";
+
+                      alert(mensaje);
                     }
                   }}
                 >
