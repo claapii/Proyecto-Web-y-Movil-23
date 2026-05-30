@@ -1,10 +1,9 @@
-import { useState } from "react";
+import {useState} from "react";
 import ReactDOM from "react-dom";
-import { NavLink, useHistory } from "react-router-dom";
+import {NavLink} from "react-router-dom";
 import "./Navbar.css";
 
 const Navbar: React.FC = () => {
-  const history = useHistory();
   const [menuAbierto, setMenuAbierto] = useState(false);
 
   const abrirCerrarMenu = () => {
@@ -14,8 +13,10 @@ const Navbar: React.FC = () => {
   const cerrarSesion = () => {
     localStorage.removeItem("token");
     setMenuAbierto(false);
-    history.push("/login");
+    window.location.href = "/login";
   };
+
+  
 
   return (
     <div className="header-container">
