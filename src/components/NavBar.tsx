@@ -1,25 +1,68 @@
-import { NavLink } from "react-router-dom";
+import { useState } from "react";
+import ReactDOM from "react-dom";
+import { NavLink, useHistory } from "react-router-dom";
 import "./Navbar.css";
 
 const Navbar: React.FC = () => {
+  const history = useHistory();
+  const [menuAbierto, setMenuAbierto] = useState(false);
+
+  const abrirCerrarMenu = () => {
+    setMenuAbierto((prev) => !prev);
+  };
+
+  const cerrarSesion = () => {
+    localStorage.removeItem("token");
+    setMenuAbierto(false);
+    history.push("/login");
+  };
+
   return (
     <div className="header-container">
-
       <img
         src="/logoMuniDigitalBlanco.png"
         className="home-logo"
+        alt="Logo Municipalidad"
       />
 
       <nav className="nav-menu">
         <NavLink to="/home">Inicio</NavLink>
-
         <NavLink to="/tramites">Trámites</NavLink>
-
         <NavLink to="/oficinas">Oficinas</NavLink>
-
         <NavLink to="/faq">Preguntas frecuentes</NavLink>
       </nav>
 
+      <div className="user-menu-container">
+        <button
+          type="button"
+          className="user-avatar-wrapper"
+          onClick={abrirCerrarMenu}
+        >
+          <img
+            src="/user-default.png"
+            alt="Usuario"
+            className="user-avatar-img"
+          />
+        </button>
+      </div>
+
+      {menuAbierto &&
+        ReactDOM.createPortal(
+          <div className="user-dropdown">
+            <button type="button" className="dropdown-item">
+              Mi perfil
+            </button>
+
+            <button
+              type="button"
+              className="dropdown-item logout"
+              onClick={cerrarSesion}
+            >
+              Cerrar sesión
+            </button>
+          </div>,
+          document.body
+        )}
     </div>
   );
 };
