@@ -124,7 +124,6 @@ CREATE TABLE oficinas (
 INSERT INTO roles (nombre)
 VALUES
     ('usuario'),
-    ('funcionario'),
     ('admin');
 
 
