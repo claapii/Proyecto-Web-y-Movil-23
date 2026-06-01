@@ -180,6 +180,11 @@ La aplicación utiliza PostgreSQL como sistema gestor de base de datos.
 * icono
 * texto
 
+### roles
+
+* id_rol
+* nombre
+
 ---
 
 # API REST Implementada
