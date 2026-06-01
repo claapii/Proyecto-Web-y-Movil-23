@@ -1,177 +1,388 @@
-# MuniDigital - Plataforma de trámites municipales
-Integrantes
-+ Ariel Carrasco
-+ Benjamín Peredo
-+ Diego Valenzuela
+# MuniDigital - Plataforma de Trámites Municipales
 
-## Objetivo de la Entrega Parcial 1
-+ Definición del problema y usuario objetivo.
-+ Identificación de requerimientos.
-+ Diseño de la UX.
-+ Arquitectura de navegación.
-+ Implementación inicial del frontend con Ionic + React.
+## Integrantes
 
-## Requerimientos del Sistema (EP 1.1)
+* Ariel Carrasco
+* Benjamín Peredo
+* Diego Valenzuela
 
-### Funcionales
-+ El sistema debe permitir a los usuarios seleccionar el tipo de trámite municipal que desean realizar.
-+ El sistema debe mostrar la disponibilidad de horarios para cada trámite en tiempo real.
-+ El sistema debe permitir agendar trámites municipales según la disponibilidad.
-+ El sistema debe permitir modificar o cancelar reservas previamente realizadas.
-+ El sistema debe mostrar el historial de trámites realizados por el usuario.
-+ El sistema debe permitir a los usuarios visualizar el estado de sus solicitudes.
-+ El sistema debe permitir a los administradores gestionar horarios, disponibilidad y solicitudes de los usuarios.
+---
 
-### NO Funcionales
-+ Usabilidad: La interfaz debe ser intuitiva y fácil de usar.
-+ Rendimiento: El sistema debe responder en tiempos adecuados.
-+ Seguridad: Se debe proteger la información de los usuarios.
+# Entrega Parcial 2
 
-## Justificación del problema y análisis del usuario objetivo (EP 1.2)
+## Objetivo
 
-### Descripción del proyecto
-MuniDigital es una aplicación web y móvil desarrollada con Ionic y React que busca mejorar el acceso a los trámites municipales dentro de Chile, permitiendo a los ciudadanos agendar y gestionar sus solicitudes de forma digital.
+Implementar la integración entre frontend y backend mediante una API REST desarrollada con Node.js y Express, conectada a una base de datos PostgreSQL, incorporando autenticación basada en JWT y consumo de servicios desde Ionic + React.
 
-Esta solución surge como respuesta a la baja digitalización de los servicios municipales, donde muchos procesos aún requieren presencialidad o presentan largos tiempos de espera, afectando la UX.
+---
 
-### Usuario Objetivo
-+ Ciudadanos mayores de 18 años.
-+ Personas que necesitan realizar trámites municipales.
-+ Usuarios con acceso a dispositivos móviles o web.
-+ Funcionarios municipales (Usuario secundario).
+# Descripción del Proyecto
 
-## Bocetos de UI/UX (EP 1.3)
-### Carpeta de "Otros".
-La carpeta "Otros" contiene:
-+ Mockups
-+ Material complementario
+MuniDigital es una aplicación web desarrollada con Ionic y React que busca mejorar el acceso a los trámites municipales en Chile.
 
+La plataforma permite a los ciudadanos:
 
-## Arquitectura de navegación y UX (EP 1.4)
-### (a) Rutas principales y secundarias
+* Registrarse en el sistema.
+* Iniciar sesión.
+* Consultar trámites municipales.
+* Revisar horarios disponibles.
+* Reservar horas de atención.
+* Visualizar el detalle de sus reservas.
 
-#### Rutas públicas
-+ /login
-+ /register
+---
 
-#### Rutas de usuario (protegidas)
-+ /home
-+ /tramites
-+ /detalle-tramite/:id
-+ /horarios/:id
-+ /agendar/:id
-+ /mis-tramites
-+ /mis-tramites/:id (detalle/estado)
+# Problema
 
-#### Rutas de administrador (protegidas)
-+ /admin
-+ /admin/horarios
-+ /admin/solicitudes
+Actualmente muchos municipios presentan procesos poco digitalizados, obligando a los ciudadanos a realizar trámites de forma presencial o enfrentar largos tiempos de espera para obtener atención.
 
-### (b) Relaciones jerárquicas entre vistas
-- **Aplicación**
-  - General
-    - Login
-    - Register
-  - **Usuario**
-    - Home
-      - Trámites
-        - Detalle de trámite
-          - Horarios
-            - Agendar
-      - Mis trámites
-        - Detalle/estado
-  - **Administrador**
-    - Panel admin
-      - Gestión de horarios
-      - Gestión de solicitudes
-### (c) Flujo de navegación entre funcionalidades
-Flujo principal (usuario): Login → Home → Trámites → Detalle → Horarios → Agendar → Confirmación → Mis trámites
+MuniDigital busca simplificar este proceso mediante una plataforma centralizada de gestión de trámites.
 
-Flujos alternativos:
-+ Modificar: Mis trámites → Detalle → Editar/Cancelar
-+ Consulta de estado: Mis trámites → Detalle
+---
 
-Flujo administrador: Login → Admin → Gestionar horarios / solicitudes
+# Usuario Objetivo
 
-### (d) Diferencia entre roles
-Usuario: acceso a navegación de trámites, agendamiento y seguimiento.
-Administrador: acceso exclusivo a panel de gestión (horarios y solicitudes).
-Control de acceso: rutas protegidas con verificación de rol (login) y redirección automática.
+## Usuario Principal
 
-### (e) Task Flow
-**Tarea 1: Agendar trámite**
-1. Ingresar al sistema.
-2. Ver lista de trámites.
-3. Seleccionar trámite.
-4. Revisar horarios disponibles.
-5. Confirmar reserva.
+* Ciudadanos mayores de 18 años.
+* Personas que necesitan realizar trámites municipales.
+* Usuarios con acceso a dispositivos móviles o computadores.
 
-**Tarea 2: Gestionar reserva**
-1. Ir a “Mis trámites”.
-2. Seleccionar trámite.
-3. Modificar o cancelar.
+## Usuario Secundario
 
-**Tarea 3: Administración**
-1. Ingresar como admin.
-2. Definir horarios disponibles.
-3. Gestionar solicitudes.
+* Funcionarios municipales (considerados para futuras versiones del sistema).
 
-### (f) Puntos críticos en la interacción.
-+ Selección de trámite (debe ser clara y filtrable).
-+ Visualización de horarios (tiempo real, evitar confusión).
-+ Confirmación de agendamiento (feedback claro).
-+ Gestión de reservas (acciones visibles y reversibles).
-+ Control de acceso por rol (evitar accesos incorrectos).
+---
 
-### (g) Coherencia entre dispositivos
-+ Móvil: navegación con barra inferior (tabs) y flujo simplificado.
-+ Web: uso de menú lateral (sidebar) y mayor densidad de información.
-+ Consistencia: mismas rutas y lógica, adaptando solo la disposición visual en cada dispositivo.
+# Funcionalidades Implementadas
 
-### (h) Justificación técnica de nuestras elecciones
-+ Usabilidad: navegación basada en tareas reduce la carga cognitiva.
-+ Eficiencia: rutas directas minimizan pasos innecesarios.
-+ Claridad estructural: jerarquía definida facilita mantenimiento.
-+ Escalabilidad: estructura modular permite agregar nuevas funcionalidades sin romper la arquitectura.
+## Autenticación
 
-## Instalación y ejecución del proyecto
+* Registro de usuarios.
+* Inicio de sesión mediante correo y contraseña.
+* Inicio de sesión mediante Clave Única (simulada).
+* Encriptación de contraseñas mediante bcrypt.
+* Generación de tokens JWT.
+* Protección de rutas privadas.
 
-### Requisitos de instalación
-+ Instalar Node.js.
-+ Instalar Ionic CLI.
+## Trámites
 
-## Clonación del repositorio
+* Visualización de trámites disponibles.
+* Consulta de información detallada.
+* Visualización de requisitos asociados.
+
+## Horarios
+
+* Consulta dinámica de horarios disponibles.
+* Actualización automática de disponibilidad.
+
+## Reservas
+
+* Creación de reservas.
+* Validación para impedir reservas duplicadas del mismo trámite.
+* Visualización del detalle de reserva.
+* Liberación de horarios al eliminar reservas.
+
+## Oficinas
+
+* Consulta de oficinas municipales.
+* Visualización de información asociada a cada oficina.
+
+---
+
+# Arquitectura de Navegación
+
+## Rutas Públicas
+
+* `/login`
+* `/register`
+* `/clave-unica`
+
+## Rutas Protegidas
+
+* `/home`
+* `/tramites`
+* `/detalle/:id`
+* `/horarios/:id`
+* `/reserva/:id`
+* `/oficinas`
+
+---
+
+# Arquitectura Backend
+
+El backend fue desarrollado utilizando Express y se encuentra organizado mediante módulos especializados:
+
+* `authRoutes`
+* `tramitesRoutes`
+* `horariosRoutes`
+* `reservasRoutes`
+* `oficinasRoutes`
+
+La autenticación se realiza mediante middleware JWT.
+
+Adicionalmente, existen middleware orientados al control de permisos por rol para futuras funcionalidades administrativas.
+
+---
+
+# Base de Datos
+
+La aplicación utiliza PostgreSQL como sistema gestor de base de datos.
+
+## Tablas Principales
+
+### usuarios
+
+* id_usuario
+* nombre
+* apellido
+* correo
+* rut
+* password_hash
+* rol
+
+### tramites
+
+* id_tramite
+* titulo
+* descripcion
+* duracion
+* modalidad
+* ubicacion
+
+### horarios
+
+* id_horario
+* id_tramite
+* fecha
+* hora
+* disponible
+
+### reservas
+
+* id_reserva
+* id_usuario
+* id_tramite
+* id_horario
+* estado
+
+### oficinas
+
+* id_oficina
+* nombre
+* direccion
+* horario
+* telefono
+
+### requisitos
+
+* id_requisito
+* id_tramite
+* icono
+* texto
+
+---
+
+# API REST Implementada
+
+## Autenticación
+
+### POST `/api/auth/register`
+
+Registrar un nuevo usuario.
+
+### POST `/api/auth/login`
+
+Iniciar sesión.
+
+### POST `/api/auth/claveunica`
+
+Iniciar sesión mediante Clave Única.
+
+---
+
+## Trámites
+
+### GET `/api/tramites`
+
+Obtener todos los trámites.
+
+### GET `/api/tramites/:id`
+
+Obtener detalle de un trámite.
+
+### POST `/api/tramites`
+
+Crear trámite.
+
+### PUT `/api/tramites/:id`
+
+Actualizar trámite.
+
+### DELETE `/api/tramites/:id`
+
+Eliminar trámite.
+
+> Los endpoints de creación, actualización y eliminación se encuentran implementados en backend y protegidos mediante control de permisos, pero aún no poseen interfaz gráfica dentro de la aplicación.
+
+---
+
+## Horarios
+
+### GET `/api/horarios/:id_tramite`
+
+Obtener horarios disponibles.
+
+### PUT `/api/horarios/:id_horario`
+
+Actualizar disponibilidad de un horario.
+
+---
+
+## Reservas
+
+### POST `/api/reservas`
+
+Crear reserva.
+
+### GET `/api/reservas/detalle/:id`
+
+Obtener detalle de una reserva.
+
+### GET `/api/reservas/:id_usuario`
+
+Obtener reservas asociadas a un usuario.
+
+### DELETE `/api/reservas/:id`
+
+Eliminar una reserva.
+
+> La eliminación de reservas se encuentra implementada en backend, pero aún no posee interfaz gráfica para el usuario final.
+
+---
+
+## Oficinas
+
+### GET `/api/oficinas`
+
+Obtener todas las oficinas.
+
+### GET `/api/oficinas/:id`
+
+Obtener una oficina específica.
+
+### POST `/api/oficinas`
+
+Crear oficina.
+
+### PUT `/api/oficinas/:id`
+
+Actualizar oficina.
+
+### DELETE `/api/oficinas/:id`
+
+Eliminar oficina.
+
+> Los endpoints administrativos de oficinas se encuentran implementados y protegidos mediante control de permisos, pero aún no poseen interfaz gráfica dentro de la aplicación.
+
+---
+
+# Seguridad Implementada
+
+* Contraseñas almacenadas mediante bcrypt.
+* Tokens JWT con expiración.
+* Middleware de validación de token.
+* Protección de rutas privadas en frontend.
+* Consultas SQL parametrizadas para prevenir SQL Injection.
+* Validaciones de entrada en backend.
+* Preparación para control de permisos por rol.
+
+---
+
+# Tecnologías Utilizadas
+
+## Frontend
+
+* Ionic
+* React
+* TypeScript
+* React Router
+* Axios
+
+## Backend
+
+* Node.js
+* Express
+
+## Base de Datos
+
+* PostgreSQL
+
+## Seguridad
+
+* JWT
+* bcrypt
+
+## Herramientas
+
+* Git
+* GitHub
+* Postman
+* Visual Studio Code
+
+---
+
+# Instalación
+
+## Clonar repositorio
+
 ```bash
 git clone https://github.com/claapii/Proyecto-Web-y-Movil-23.git
 ```
 
-## Instalación de dependencias
+## Instalar dependencias
+
 ```bash
 npm install
 ```
 
-## Ejecución del proyecto
+## Ejecutar Frontend
+
 ```bash
 ionic serve
 ```
 
-## Tecnologías utilizadas en este proyecto.
-+ Ionic Framework.
-+ React.
-+ TypeScript.
-+ React Router.
-+ CSS.
-+ Git y GitHub.
+## Ejecutar Backend
 
-## Estado actual del proyecto
+```bash
+npm start
+```
 
-Actualmente el proyecto cuenta con:
-+ Pantalla de login.
-+ Página principal (Home).
-+ Listado de trámites municipales.
-+ Vista dinámica de detalle de trámites.
-+ Pantalla de horarios.
-+ Navegación entre pantallas mediante React Router.
-+ Componente reutilizable NavBar.
-+ Diseño responsive inicial para web y móvil.
+---
+
+# Estado Actual
+
+Implementación correspondiente a la Entrega Parcial 2:
+
+* API REST desarrollada con Express.
+* Integración con PostgreSQL.
+* Sistema de autenticación mediante JWT.
+* Protección de rutas privadas.
+* Consumo de API mediante Axios.
+* Gestión de usuarios.
+* Gestión de trámites.
+* Gestión de horarios.
+* Gestión de reservas.
+* Integración frontend y backend completada.
+
+---
+
+# Funcionalidades Consideradas para la Entrega Final
+
+* Historial de reservas por usuario.
+* Modificación de reservas.
+* Cancelación de reservas desde interfaz gráfica.
+* Implementación completa del panel administrativo.
+* Gestión visual de horarios por administrador.
+* Gestión de solicitudes administrativas.
+* Mejoras de experiencia de usuario.
+* Despliegue de la aplicación.
