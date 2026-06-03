@@ -126,7 +126,7 @@ Adicionalmente, existen middleware orientados al control de permisos por rol par
 
 # Base de Datos
 
-La aplicación utiliza PostgreSQL como sistema gestor de base de datos.
+La aplicación utiliza PostgreSQL como sistema gestor de base de datos. La base de datos debe ser creada por el usuario de manera local, con los contenidos de database.sql en la carpeta backend.
 
 ## Tablas Principales
 
@@ -315,7 +315,7 @@ Eliminar oficina.
 
 ## Backend
 
-* Node.js
+* Node.js (Actualizar a la versión mas reciente)
 * Express
 
 ## Base de Datos

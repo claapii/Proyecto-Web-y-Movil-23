@@ -17,6 +17,8 @@ import ClaveUnica from './pages/ClaveUnica';
 import Oficinas from './pages/Oficinas';
 import PrivateRoute from './components/PrivateRoute';
 import DetalleReserva from './pages/DetalleReserva';
+import AdminRoute from './components/AdminRoute';
+import AdminPanel from './pages/AdminPanel';
 
 
 /* Core CSS required for Ionic components to work properly */
@@ -63,6 +65,9 @@ const App: React.FC = () => (
         <PrivateRoute path="/horarios/:id" component={Horarios} exact />
         
         <PrivateRoute path="/reserva/:id" component={DetalleReserva} exact/>
+
+        <AdminRoute path="/admin" component={AdminPanel} exact />
+
       </IonRouterOutlet>
     </IonReactRouter>
   </IonApp>
