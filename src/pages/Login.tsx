@@ -10,6 +10,8 @@ import './Login.css';
 import { useState } from 'react';
 import { useHistory } from 'react-router';
 import { loginUsuario } from "../services/authService"; //Manejo de token
+import { useToast } from '../hooks/useToast';
+
 
 /*
  * Página principal de inicio de sesión.
@@ -23,6 +25,7 @@ import { loginUsuario } from "../services/authService"; //Manejo de token
 
 const Login: React.FC = () => {
 
+  const { showToast } = useToast();
   const history = useHistory();
   const [correo, setCorreo] = useState("");
   const [password, setPassword] = useState("");
@@ -45,13 +48,13 @@ const Login: React.FC = () => {
         JSON.stringify(response.data)
       );
 
-      alert("Login exitoso");
+      showToast("Login exitoso", "success");
 
       history.push("/home");
 
     } catch (error) {
 
-      alert("Credenciales incorrectas");
+      showToast("Credenciales incorrectas", "danger");
 
       console.error(error);
     }

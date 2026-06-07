@@ -10,6 +10,10 @@ import './Horarios.css';
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useHistory } from 'react-router-dom';
+import { useToast } from '../hooks/useToast';
+import { useStorage } from '../hooks/useStorage';
+
+
 
 import NavBar from "../components/NavBar";
 
@@ -27,6 +31,9 @@ import {
 const Horarios: React.FC = () => {
 
   const history = useHistory();
+  const { showToast } = useToast();
+  const { guardar, obtener } = useStorage();
+
 
   /* ID trámite desde URL */
   const { id } = useParams<{ id: string }>();
@@ -275,10 +282,7 @@ const Horarios: React.FC = () => {
 
                     if (!idHorarioSeleccionado) {
 
-                      alert(
-                        "Selecciona un horario"
-                      );
-
+                      showToast("Selecciona un horario", "warning");
                       return;
                     }
 
@@ -289,10 +293,7 @@ const Horarios: React.FC = () => {
 
                       if (!token) {
 
-                        alert(
-                          "Debes iniciar sesión para reservar"
-                        );
-
+                        showToast("Debes iniciar sesión para reservar", "danger");
                         return;
                       }
 
@@ -303,6 +304,10 @@ const Horarios: React.FC = () => {
                         );
 
                       console.log(response);
+                      // Guardar reserva localmente
+                      const reservasGuardadas = await obtener('reservas') || [];
+                      reservasGuardadas.push(response.data);
+                      await guardar('reservas', reservasGuardadas);
 
                       const idReserva =
                         response.data.id_reserva;
@@ -333,7 +338,7 @@ const Horarios: React.FC = () => {
                         error.response?.data?.message ||
                         "Error al reservar horario";
 
-                      alert(mensaje);
+                      showToast(mensaje, "danger");
                     }
                   }}
                 >

@@ -10,6 +10,8 @@ import './Register.css';
 import { useState } from "react";
 import { useHistory } from "react-router-dom";
 import { registerUsuario } from "../services/authService";
+import { useToast } from '../hooks/useToast';
+
 
 /*
  * Página de registro de usuarios.
@@ -19,6 +21,8 @@ import { registerUsuario } from "../services/authService";
 
 const Register: React.FC = () => {
   const history = useHistory();
+  const { showToast } = useToast();
+
 
   const [nombre, setNombre] = useState("");
   const [apellido, setApellido] = useState("");
@@ -30,7 +34,7 @@ const Register: React.FC = () => {
   const handleRegister = async () => {
 
     if (password !== confirmPassword) {
-      alert("Las contraseñas no coinciden");
+      showToast("Las contraseñas no coinciden", "danger");
       return;
     }
 
@@ -44,15 +48,14 @@ const Register: React.FC = () => {
         password
       });
 
-      alert("Usuario registrado correctamente");
+      showToast("Usuario registrado correctamente", "success");
 
       history.push("/");
 
-    } catch (error) {
-
+    } catch (error: any) {
+      const mensaje = error.response?.data?.message || "Error al registrar usuario";
+      showToast(mensaje, "danger");
       console.error(error);
-
-      alert("Error al registrar usuario");
     }
   };
 

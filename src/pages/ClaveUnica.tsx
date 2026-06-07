@@ -10,6 +10,8 @@ import { useState } from 'react';
 import { useHistory } from 'react-router';
 import { IonItem } from '@ionic/react';
 import './ClaveUnica.css';
+import { useToast } from '../hooks/useToast';
+
 
 /*
  * Página de autenticación mediante ClaveÚnica.
@@ -19,6 +21,7 @@ import './ClaveUnica.css';
 
 const ClaveUnica: React.FC = () => {
   const history = useHistory();
+  const { showToast } = useToast();
   const [rut, setRut] = useState("");
   const [password, setPassword] = useState("");
   const handleLogin = async () => {
@@ -35,14 +38,13 @@ const ClaveUnica: React.FC = () => {
         response.token
       );
 
-      alert("Login exitoso");
+      showToast("Login exitoso", "success");
 
       history.push("/home");
 
-    } catch (error) {
-
-      alert("Credenciales incorrectas");
-
+    } catch (error: any) {
+      const mensaje = error.response?.data?.message || "Credenciales incorrectas";
+      showToast(mensaje, "danger");
       console.error(error);
     }
   };

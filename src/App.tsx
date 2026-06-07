@@ -19,6 +19,10 @@ import PrivateRoute from './components/PrivateRoute';
 import DetalleReserva from './pages/DetalleReserva';
 import AdminRoute from './components/AdminRoute';
 import AdminPanel from './pages/AdminPanel';
+import AdminOficinas from './pages/AdminOficinas';
+import MisReservas from './pages/MisReservas';
+
+
 
 
 /* Core CSS required for Ionic components to work properly */
@@ -67,6 +71,10 @@ const App: React.FC = () => (
         <PrivateRoute path="/reserva/:id" component={DetalleReserva} exact/>
 
         <AdminRoute path="/admin" component={AdminPanel} exact />
+
+        <AdminRoute path="/admin/oficinas" component={AdminOficinas} exact />
+
+        <PrivateRoute path="/mis-reservas" component={MisReservas} exact />
 
       </IonRouterOutlet>
     </IonReactRouter>
