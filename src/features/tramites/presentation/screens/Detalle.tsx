@@ -3,11 +3,11 @@ import {
   IonHeader,
   IonToolbar,
   IonContent,
-  IonButton
+  IonButton,
+  IonSpinner
 } from "@ionic/react";
 
 import { useParams } from "react-router-dom";
-
 import "./detalle.css";
 import NavBar from "../../../../core/presentation/components/NavBar";
 import axios from "axios";
@@ -67,9 +67,9 @@ const Detalle: React.FC = () => {
 
         <IonContent>
 
-          <h1>
-            Cargando trámite...
-          </h1>
+          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
+          <IonSpinner name="crescent" />
+          </div>
 
         </IonContent>
 
@@ -114,17 +114,11 @@ const Detalle: React.FC = () => {
               INFORMACIÓN ADICIONAL
             </h3>
 
-            <p>
-              Duración estimada: {tramite.duracion}
-            </p>
-
-            <p>
-              Modalidad: {tramite.modalidad}
-            </p>
-
-            <p>
-              Ubicación: {tramite.ubicacion}
-            </p>
+            <div className="detalle-adicional">
+              <p>⏱ Duración: {tramite.duracion}</p>
+              <p>📍 Modalidad: {tramite.modalidad}</p>
+              <p>🏢 Ubicación: {tramite.ubicacion}</p>
+            </div>
 
           </div>
 

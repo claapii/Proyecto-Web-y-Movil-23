@@ -26,6 +26,8 @@ const Navbar: React.FC = () => {
         src="/logoMuniDigitalBlanco.png"
         className="home-logo"
         alt="Logo Municipalidad"
+        onClick={() => history.push('/home')}
+        style={{ cursor: 'pointer' }}
       />
 
       <nav className="nav-menu">

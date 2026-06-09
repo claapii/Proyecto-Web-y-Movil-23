@@ -8,7 +8,7 @@ import {
 import { IonReactRouter } from '@ionic/react-router';
 
 import Login from '../../features/auth/presentation/screens/Login';
-import Home from '../../features/home/presentation/screen/Home';
+import Home from '../../features/home/presentation/screens/Home';
 import Tramites from '../../features/tramites/presentation/screens/Tramites';
 import Horarios from '../../features/reservas/presentation/screens/Horarios';
 import Detalle from '../../features/tramites/presentation/screens/Detalle';
@@ -21,7 +21,7 @@ import AdminRoute from './AdminRoute';
 import AdminPanel from '../../features/admin/presentation/screens/AdminPanel';
 import AdminOficinas from '../../features/admin/presentation/screens/AdminOficinas';
 import MisReservas from '../../features/reservas/presentation/screens/MisReservas';
-
+import NotFound from '../../features/home/presentation/screens/NotFound';
 
 
 
@@ -75,6 +75,8 @@ const App: React.FC = () => (
         <AdminRoute path="/admin/oficinas" component={AdminOficinas} exact />
 
         <PrivateRoute path="/mis-reservas" component={MisReservas} exact />
+
+        <Route component={NotFound} />
 
       </IonRouterOutlet>
     </IonReactRouter>
