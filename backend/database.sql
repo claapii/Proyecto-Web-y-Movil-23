@@ -291,6 +291,16 @@ VALUES
     '600 329 935'
 );
 
+/* -------------------------
+   ÍNDICES
+------------------------- */
+CREATE INDEX IF NOT EXISTS idx_usuarios_correo ON usuarios(correo);
+CREATE INDEX IF NOT EXISTS idx_usuarios_rut ON usuarios(rut);
+CREATE INDEX IF NOT EXISTS idx_reservas_id_usuario ON reservas(id_usuario);
+CREATE INDEX IF NOT EXISTS idx_reservas_id_tramite ON reservas(id_tramite);
+CREATE INDEX IF NOT EXISTS idx_horarios_id_tramite ON horarios(id_tramite);
+CREATE INDEX IF NOT EXISTS idx_horarios_disponible ON horarios(disponible);
+
 
 /* =========================================================
    USUARIO DE PRUEBA (OPCIONAL)

@@ -6,17 +6,34 @@ const { verificarAdmin } = require("../../core/middleware/roleMiddleware");
 
 const router = express.Router();
 
-/* GET - Obtener todos los trámites */
+/* GET - Obtener todos los trámites con paginación*/
 router.get("/", async (req, res) => {
   try {
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const offset = (page - 1) * limit;
+
+    //Total de trámites
+    const total = await pool.query(
+      "SELECT COUNT(*) FROM tramites"
+    );
+
+    //Trámites con paginación
     const result = await pool.query(
-      "SELECT * FROM tramites ORDER BY id_tramite ASC"
+      "SELECT * FROM tramites ORDER BY id_tramite ASC LIMIT $1 OFFSET $2",
+      [limit, offset]
     );
 
     res.status(200).json({
       success: true,
       message: "Trámites obtenidos correctamente",
-      data: result.rows
+      data: result.rows,
+      pagination: {
+        total: parseInt(total.rows[0].count),
+        page,
+        limit,
+        totalPages: Math.ceil(total.rows[0].count / limit)
+      }
     });
 
   } catch (error) {
