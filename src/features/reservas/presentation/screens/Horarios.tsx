@@ -12,6 +12,8 @@ import { useParams } from "react-router-dom";
 import { useHistory } from 'react-router-dom';
 import { useToast } from '../../../../core/presentation/hooks/useToast';
 import { useStorage } from '../../../../core/presentation/hooks/useStorage';
+import emailjs from '@emailjs/browser';
+import axios from 'axios';
 
 
 
@@ -33,6 +35,7 @@ const Horarios: React.FC = () => {
   const history = useHistory();
   const { showToast } = useToast();
   const { guardar, obtener } = useStorage();
+  const [tramite, setTramite] = useState<any>(null);
 
 
   /* ID trámite desde URL */
@@ -63,6 +66,10 @@ const Horarios: React.FC = () => {
         const data = await obtenerHorarios(id);
 
         setHorarios(data);
+
+        // Obtener nombre del trámite
+      const response = await axios.get(`http://localhost:3000/api/tramites/${id}`);
+      setTramite(response.data.data);
 
       } catch (error) {
 
@@ -308,6 +315,23 @@ const Horarios: React.FC = () => {
                       const reservasGuardadas = await obtener('reservas') || [];
                       reservasGuardadas.push(response.data);
                       await guardar('reservas', reservasGuardadas);
+
+                      //Obtener datos del usuario
+                      const usuario = JSON.parse(localStorage.getItem("usuario") || "{}");
+
+                      //enviar correo de confirmación
+                      await emailjs.send(
+                        import.meta.env.VITE_EMAILJS_SERVICE_ID,
+                        import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
+                        {
+                          nombre: `${usuario.nombre} ${usuario.apellido}`,
+                          email: usuario.correo,
+                          tramite: tramite?.titulo || `Trámite #${id}`,
+                          fecha: horarioSeleccionado.split(" - ")[0],
+                          hora: horarioSeleccionado.split(" - ")[1],
+                        },
+                        import.meta.env.VITE_EMAILJS_PUBLIC_KEY
+                      );
 
                       const idReserva =
                         response.data.id_reserva;
