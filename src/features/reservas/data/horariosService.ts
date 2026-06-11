@@ -1,7 +1,7 @@
 import axios from "axios";
 
-const API_HORARIOS = "http://localhost:3000/api/horarios";
-const API_RESERVAS = "http://localhost:3000/api/reservas";
+const API_HORARIOS = `${import.meta.env.VITE_API_URL}/horarios`;
+const API_RESERVAS = `${import.meta.env.VITE_API_URL}/reservas`;
 
 export const obtenerHorarios = async (
   id_tramite: string

@@ -68,7 +68,7 @@ const Horarios: React.FC = () => {
         setHorarios(data);
 
         // Obtener nombre del trámite
-      const response = await axios.get(`http://localhost:3000/api/tramites/${id}`);
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/tramites/${id}`);
       setTramite(response.data.data);
 
       } catch (error) {

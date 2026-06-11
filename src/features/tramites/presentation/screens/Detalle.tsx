@@ -8,7 +8,7 @@ import {
 } from "@ionic/react";
 
 import { useParams } from "react-router-dom";
-import "./detalle.css";
+import "./Detalle.css";
 import NavBar from "../../../../core/presentation/components/NavBar";
 import axios from "axios";
 import { useEffect, useState } from "react";
@@ -36,8 +36,11 @@ const Detalle: React.FC = () => {
       try {
 
         const response = await axios.get(
-          `http://localhost:3000/api/tramites/${id}`
+          `${import.meta.env.VITE_API_URL}/tramites/${id}`
         );
+
+        console.log("Respuesta tramites:", response.data);
+
 
         setTramite(response.data.data);
 

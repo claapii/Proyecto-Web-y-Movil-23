@@ -1,7 +1,7 @@
 import {useState} from "react";
 import ReactDOM from "react-dom";
 import {NavLink, useHistory} from "react-router-dom";
-import "./Navbar.css";
+import "./NavBar.css";
 
 const Navbar: React.FC = () => {
   const [menuAbierto, setMenuAbierto] = useState(false);

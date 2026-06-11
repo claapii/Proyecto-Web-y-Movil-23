@@ -29,7 +29,7 @@ const Tramites: React.FC = () => {
     try {
 
       const response = await axios.get(
-        "http://localhost:3000/api/tramites"
+        `${import.meta.env.VITE_API_URL}/tramites`
       );
 
       setTramites(response.data.data);

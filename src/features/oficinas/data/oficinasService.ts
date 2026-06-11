@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = "http://localhost:3000/api/oficinas";
+const API_URL = `${import.meta.env.VITE_API_URL}/oficinas`;
 
 const getToken = () => localStorage.getItem("token");
 

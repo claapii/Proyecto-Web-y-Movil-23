@@ -20,9 +20,10 @@ const Oficinas: React.FC = () => {
   const cargarOficinas = async () => {
     try {
       const response = await getOficinas();
-      setOficinas(response.data);
+      setOficinas(response.data || []);
     } catch (error) {
       console.error("Error al cargar oficinas:", error);
+      setOficinas([]);
     } finally {
       setLoading(false);
     }
