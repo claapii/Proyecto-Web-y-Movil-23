@@ -8,26 +8,24 @@
 
 ---
 
-# Entrega Parcial 2
-
-## Objetivo
-
-Implementar la integración entre frontend y backend mediante una API REST desarrollada con Node.js y Express, conectada a una base de datos PostgreSQL, incorporando autenticación basada en JWT y consumo de servicios desde Ionic + React.
-
----
-
 # Descripción del Proyecto
 
-MuniDigital es una aplicación web desarrollada con Ionic y React que busca mejorar el acceso a los trámites municipales en Chile.
+MuniDigital es una aplicación web y móvil desarrollada con Ionic y React que busca mejorar el acceso a los trámites municipales en Chile.
 
 La plataforma permite a los ciudadanos:
 
-* Registrarse en el sistema.
-* Iniciar sesión.
-* Consultar trámites municipales.
-* Revisar horarios disponibles.
+* Registrarse e iniciar sesión en el sistema.
+* Consultar trámites municipales disponibles.
+* Revisar horarios disponibles para cada trámite.
 * Reservar horas de atención.
-* Visualizar el detalle de sus reservas.
+* Recibir confirmación de reserva por correo electrónico.
+* Visualizar y gestionar sus reservas.
+* Consultar información de oficinas municipales.
+
+Los administradores pueden además:
+
+* Crear, editar y eliminar oficinas.
+* Gestionar trámites desde el panel de administración.
 
 ---
 
@@ -49,7 +47,25 @@ MuniDigital busca simplificar este proceso mediante una plataforma centralizada 
 
 ## Usuario Secundario
 
-* Funcionarios municipales (considerados para futuras versiones del sistema).
+* Administradores municipales con acceso al panel de gestión.
+
+---
+
+# Arquitectura
+
+El proyecto implementa tres patrones de arquitectura:
+
+## Clean Architecture
+
+Separación por responsabilidades en capas: presentación, dominio y datos.
+
+## Feature-Based Architecture
+
+El sistema se organiza por dominios funcionales (`auth`, `tramites`, `reservas`, `oficinas`, `admin`), tanto en frontend como en backend.
+
+## Component-Based Architecture
+
+La UI se compone de piezas reutilizables organizadas en `core/presentation/components`.
 
 ---
 
@@ -57,35 +73,46 @@ MuniDigital busca simplificar este proceso mediante una plataforma centralizada 
 
 ## Autenticación
 
-* Registro de usuarios.
+* Registro de usuarios con validación de RUT chileno, correo y contraseña.
 * Inicio de sesión mediante correo y contraseña.
 * Inicio de sesión mediante Clave Única (simulada).
-* Encriptación de contraseñas mediante bcrypt.
-* Generación de tokens JWT.
-* Protección de rutas privadas.
+* Encriptación de contraseñas con bcrypt.
+* Generación y validación de tokens JWT.
+* Protección de rutas privadas en frontend.
+* Diferenciación de roles (usuario / admin).
 
 ## Trámites
 
-* Visualización de trámites disponibles.
-* Consulta de información detallada.
-* Visualización de requisitos asociados.
+* Visualización paginada de trámites disponibles.
+* Consulta de información detallada con requisitos.
 
 ## Horarios
 
 * Consulta dinámica de horarios disponibles.
-* Actualización automática de disponibilidad.
+* Actualización automática de disponibilidad al reservar.
 
 ## Reservas
 
-* Creación de reservas.
-* Validación para impedir reservas duplicadas del mismo trámite.
-* Visualización del detalle de reserva.
+* Creación de reservas con validación de duplicados.
+* Envío automático de correo de confirmación vía EmailJS.
+* Almacenamiento local de reservas con Capacitor Preferences.
+* Visualización de reservas en página "Mis Reservas".
+* Detalle de reserva confirmada.
 * Liberación de horarios al eliminar reservas.
 
 ## Oficinas
 
-* Consulta de oficinas municipales.
-* Visualización de información asociada a cada oficina.
+* Consulta de oficinas municipales desde base de datos.
+* Panel de administración para crear, editar y eliminar oficinas (solo admin).
+
+## Seguridad
+
+* Helmet para protección de headers HTTP.
+* Rate limiting: 100 peticiones/15min general, 10 intentos/15min en autenticación.
+* CORS restrictivo (solo dominios permitidos).
+* Límite de tamaño de body (10kb).
+* Consultas SQL parametrizadas (protección SQL Injection).
+* Middleware de roles (verificarToken, verificarAdmin).
 
 ---
 
@@ -97,7 +124,7 @@ MuniDigital busca simplificar este proceso mediante una plataforma centralizada 
 * `/register`
 * `/clave-unica`
 
-## Rutas Protegidas
+## Rutas Protegidas (usuario autenticado)
 
 * `/home`
 * `/tramites`
@@ -105,201 +132,131 @@ MuniDigital busca simplificar este proceso mediante una plataforma centralizada 
 * `/horarios/:id`
 * `/reserva/:id`
 * `/oficinas`
+* `/mis-reservas`
+
+## Rutas de Admin
+
+* `/admin`
+* `/admin/oficinas`
 
 ---
 
-# Arquitectura Backend
+# Estructura del Proyecto
 
-El backend fue desarrollado utilizando Express y se encuentra organizado mediante módulos especializados:
+```
+Proyecto-Web-y-Movil-23/
+  src/                        # Frontend (Ionic React)
+    core/
+      presentation/
+        components/           # NavBar y componentes globales
+        hooks/                # useToast, useStorage
+      router/                 # App.tsx, PrivateRoute, AdminRoute
+      theme/                  # variables.css
+    features/
+      auth/
+        presentation/screens/ # Login, Register, ClaveUnica
+        data/                 # authService.ts
+      tramites/
+        presentation/screens/ # Tramites, Detalle
+      reservas/
+        presentation/screens/ # Horarios, DetalleReserva, MisReservas
+        data/                 # horariosService.ts
+      oficinas/
+        presentation/screens/ # Oficinas
+        data/                 # oficinasService.ts
+      admin/
+        presentation/screens/ # AdminPanel, AdminOficinas
+      home/
+        presentation/screen/  # Home, NotFound
 
-* `authRoutes`
-* `tramitesRoutes`
-* `horariosRoutes`
-* `reservasRoutes`
-* `oficinasRoutes`
-
-La autenticación se realiza mediante middleware JWT.
-
-Adicionalmente, existen middleware orientados al control de permisos por rol para futuras funcionalidades administrativas.
+  backend/
+    src/
+      core/
+        config/               # db.js
+        middleware/           # authMiddleware, roleMiddleware
+        server/               # app.js, server.js
+      features/
+        auth/                 # authRoutes.js
+        tramites/             # tramitesRoutes.js
+        horarios/             # horariosRoutes.js
+        reservas/             # reservasRoutes.js
+        oficinas/             # oficinasRoutes.js
+```
 
 ---
 
 # Base de Datos
 
-La aplicación utiliza PostgreSQL como sistema gestor de base de datos. La base de datos debe ser creada por el usuario de manera local, con los contenidos de database.sql en la carpeta backend.
+La aplicación utiliza PostgreSQL. El esquema completo se encuentra en `backend/database.sql`.
 
-## Tablas Principales
+## Tablas
 
-### usuarios
+* **usuarios** — id_usuario, nombre, apellido, correo, rut, password_hash, rol
+* **tramites** — id_tramite, titulo, descripcion, duracion, modalidad, ubicacion
+* **horarios** — id_horario, id_tramite, fecha, hora, disponible
+* **reservas** — id_reserva, id_usuario, id_tramite, id_horario, estado, creado_en
+* **oficinas** — id_oficina, nombre, direccion, horario, telefono
+* **requisitos** — id_requisito, id_tramite, icono, texto
+* **roles** — id_rol, nombre
 
-* id_usuario
-* nombre
-* apellido
-* correo
-* rut
-* password_hash
-* rol
+## Índices
 
-### tramites
-
-* id_tramite
-* titulo
-* descripcion
-* duracion
-* modalidad
-* ubicacion
-
-### horarios
-
-* id_horario
-* id_tramite
-* fecha
-* hora
-* disponible
-
-### reservas
-
-* id_reserva
-* id_usuario
-* id_tramite
-* id_horario
-* estado
-
-### oficinas
-
-* id_oficina
-* nombre
-* direccion
-* horario
-* telefono
-
-### requisitos
-
-* id_requisito
-* id_tramite
-* icono
-* texto
-
-### roles
-
-* id_rol
-* nombre
+```sql
+CREATE INDEX IF NOT EXISTS idx_usuarios_correo ON usuarios(correo);
+CREATE INDEX IF NOT EXISTS idx_usuarios_rut ON usuarios(rut);
+CREATE INDEX IF NOT EXISTS idx_reservas_id_usuario ON reservas(id_usuario);
+CREATE INDEX IF NOT EXISTS idx_reservas_id_tramite ON reservas(id_tramite);
+CREATE INDEX IF NOT EXISTS idx_horarios_id_tramite ON horarios(id_tramite);
+CREATE INDEX IF NOT EXISTS idx_horarios_disponible ON horarios(disponible);
+```
 
 ---
 
-# API REST Implementada
+# API REST
 
-## Autenticación
+## Autenticación `/api/auth`
 
-### POST `/api/auth/register`
+| Método | Ruta | Descripción | Auth |
+|--------|------|-------------|------|
+| POST | /register | Registrar usuario | No |
+| POST | /login | Iniciar sesión | No |
+| POST | /claveunica | Login con Clave Única | No |
 
-Registrar un nuevo usuario.
+## Trámites `/api/tramites`
 
-### POST `/api/auth/login`
+| Método | Ruta | Descripción | Auth |
+|--------|------|-------------|------|
+| GET | / | Listar trámites (paginado) | No |
+| GET | /:id | Detalle de trámite | No |
+| POST | / | Crear trámite | Admin |
+| PUT | /:id | Actualizar trámite | Admin |
+| DELETE | /:id | Eliminar trámite | Admin |
 
-Iniciar sesión.
+## Horarios `/api/horarios`
 
-### POST `/api/auth/claveunica`
+| Método | Ruta | Descripción | Auth |
+|--------|------|-------------|------|
+| GET | /:id_tramite | Horarios de un trámite | No |
+| PUT | /:id_horario | Actualizar disponibilidad | No |
 
-Iniciar sesión mediante Clave Única.
+## Reservas `/api/reservas`
 
----
+| Método | Ruta | Descripción | Auth |
+|--------|------|-------------|------|
+| POST | / | Crear reserva | Sí |
+| GET | /:id_usuario | Reservas de un usuario | Sí |
+| GET | /detalle/:id | Detalle de reserva | Sí |
+| DELETE | /:id | Eliminar reserva | Sí |
 
-## Trámites
+## Oficinas `/api/oficinas`
 
-### GET `/api/tramites`
-
-Obtener todos los trámites.
-
-### GET `/api/tramites/:id`
-
-Obtener detalle de un trámite.
-
-### POST `/api/tramites`
-
-Crear trámite.
-
-### PUT `/api/tramites/:id`
-
-Actualizar trámite.
-
-### DELETE `/api/tramites/:id`
-
-Eliminar trámite.
-
-> Los endpoints de creación, actualización y eliminación se encuentran implementados en backend y protegidos mediante control de permisos, pero aún no poseen interfaz gráfica dentro de la aplicación.
-
----
-
-## Horarios
-
-### GET `/api/horarios/:id_tramite`
-
-Obtener horarios disponibles.
-
-### PUT `/api/horarios/:id_horario`
-
-Actualizar disponibilidad de un horario.
-
----
-
-## Reservas
-
-### POST `/api/reservas`
-
-Crear reserva.
-
-### GET `/api/reservas/detalle/:id`
-
-Obtener detalle de una reserva.
-
-### GET `/api/reservas/:id_usuario`
-
-Obtener reservas asociadas a un usuario.
-
-### DELETE `/api/reservas/:id`
-
-Eliminar una reserva.
-
-> La eliminación de reservas se encuentra implementada en backend, pero aún no posee interfaz gráfica para el usuario final.
-
----
-
-## Oficinas
-
-### GET `/api/oficinas`
-
-Obtener todas las oficinas.
-
-### GET `/api/oficinas/:id`
-
-Obtener una oficina específica.
-
-### POST `/api/oficinas`
-
-Crear oficina.
-
-### PUT `/api/oficinas/:id`
-
-Actualizar oficina.
-
-### DELETE `/api/oficinas/:id`
-
-Eliminar oficina.
-
-> Los endpoints administrativos de oficinas se encuentran implementados y protegidos mediante control de permisos, pero aún no poseen interfaz gráfica dentro de la aplicación.
-
----
-
-# Seguridad Implementada
-
-* Contraseñas almacenadas mediante bcrypt.
-* Tokens JWT con expiración.
-* Middleware de validación de token.
-* Protección de rutas privadas en frontend.
-* Consultas SQL parametrizadas para prevenir SQL Injection.
-* Validaciones de entrada en backend.
-* Preparación para control de permisos por rol.
+| Método | Ruta | Descripción | Auth |
+|--------|------|-------------|------|
+| GET | / | Listar oficinas | No |
+| GET | /:id | Detalle de oficina | No |
+| POST | / | Crear oficina | Admin |
+| PUT | /:id | Actualizar oficina | Admin |
+| DELETE | /:id | Eliminar oficina | Admin |
 
 ---
 
@@ -312,82 +269,149 @@ Eliminar oficina.
 * TypeScript
 * React Router
 * Axios
+* EmailJS (confirmación de reservas por correo)
+* Capacitor Preferences (almacenamiento local)
 
 ## Backend
 
-* Node.js (Actualizar a la versión mas reciente)
+* Node.js 18+
 * Express
+* Helmet
+* express-rate-limit
+* bcrypt
+* jsonwebtoken
 
 ## Base de Datos
 
-* PostgreSQL
+* PostgreSQL 15
 
-## Seguridad
+## Despliegue
 
-* JWT
-* bcrypt
+* Docker
+* Docker Compose
 
 ## Herramientas
 
-* Git
-* GitHub
+* Git / GitHub
 * Postman
 * Visual Studio Code
 
 ---
 
-# Instalación
+# Instalación y Ejecución
 
-## Clonar repositorio
+## Opción 1 — Con Docker (recomendado)
+
+### Requisitos
+
+* Docker Desktop instalado y corriendo
+
+### Pasos
 
 ```bash
+# Clonar repositorio
 git clone https://github.com/claapii/Proyecto-Web-y-Movil-23.git
+cd Proyecto-Web-y-Movil-23
+
+# Levantar todos los servicios
+docker-compose up --build
 ```
 
-## Instalar dependencias
+Esto levanta automáticamente:
+
+* Base de datos PostgreSQL en el puerto 5432
+* Backend en http://localhost:3000
+* Frontend en http://localhost:5173
+
+---
+
+## Opción 2 — Instalación Manual
+
+### Requisitos
+
+* Node.js 18+
+* PostgreSQL instalado y corriendo
+* Ionic CLI (`npm install -g @ionic/cli`)
+
+### Base de datos
+
+1. Crear la base de datos `municipalidad_db` en PostgreSQL.
+2. Ejecutar el archivo `backend/database.sql` en pgAdmin o psql.
+
+### Backend
 
 ```bash
+cd backend
 npm install
 ```
 
-## Ejecutar Frontend
+Crear el archivo `.env` en la carpeta `backend` con:
 
-```bash
-ionic serve
+```
+PORT=3000
+DB_HOST=localhost
+DB_PORT=5432
+DB_USER=postgres
+DB_PASSWORD=tu_password
+DB_NAME=municipalidad_db
+JWT_SECRET=tu_clave_secreta
 ```
 
-## Ejecutar Backend
+Iniciar el backend:
 
 ```bash
 npm start
 ```
 
+### Frontend
+
+```bash
+# Desde la raíz del proyecto
+npm install
+ionic serve
+```
+
+La app estará disponible en http://localhost:8100
+
+---
+
+# Variables de Entorno
+
+## Backend (`backend/.env`)
+
+| Variable | Descripción |
+|----------|-------------|
+| PORT | Puerto del servidor (3000) |
+| DB_HOST | Host de PostgreSQL |
+| DB_PORT | Puerto de PostgreSQL (5432) |
+| DB_USER | Usuario de PostgreSQL |
+| DB_PASSWORD | Contraseña de PostgreSQL |
+| DB_NAME | Nombre de la base de datos |
+| JWT_SECRET | Clave secreta para JWT |
+
+## Frontend (`.env`)
+
+| Variable | Descripción |
+|----------|-------------|
+| VITE_API_URL | URL base del backend |
+| VITE_EMAILJS_SERVICE_ID | Service ID de EmailJS |
+| VITE_EMAILJS_TEMPLATE_ID | Template ID de EmailJS |
+| VITE_EMAILJS_PUBLIC_KEY | Public Key de EmailJS |
+
 ---
 
 # Estado Actual
 
-Implementación correspondiente a la Entrega Parcial 2:
+Implementación correspondiente a la Entrega Final:
 
-* API REST desarrollada con Express.
-* Integración con PostgreSQL.
-* Sistema de autenticación mediante JWT.
-* Protección de rutas privadas.
-* Consumo de API mediante Axios.
-* Gestión de usuarios.
-* Gestión de trámites.
-* Gestión de horarios.
-* Gestión de reservas.
-* Integración frontend y backend completada.
-
----
-
-# Funcionalidades Consideradas para la Entrega Final
-
-* Historial de reservas por usuario.
-* Modificación de reservas.
-* Cancelación de reservas desde interfaz gráfica.
-* Implementación completa del panel administrativo.
-* Gestión visual de horarios por administrador.
-* Gestión de solicitudes administrativas.
-* Mejoras de experiencia de usuario.
-* Despliegue de la aplicación.
+* API REST desarrollada con Express y arquitectura feature-based.
+* Integración con PostgreSQL con índices optimizados y paginación.
+* Sistema de autenticación mediante JWT con roles.
+* Protección de rutas privadas y de administrador.
+* CRUD completo de oficinas con panel de administración.
+* Notificaciones con Toast en toda la aplicación.
+* Almacenamiento local de reservas con Capacitor Preferences.
+* Confirmación de reservas por correo electrónico (EmailJS).
+* Seguridad avanzada con Helmet, rate limiting y CORS restrictivo.
+* Despliegue con Docker y Docker Compose.
+* Página 404 y mejoras generales de UI/UX.
